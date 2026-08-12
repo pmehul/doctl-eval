@@ -135,30 +135,43 @@ difference matter.**
 | built by | Mistral AI | DeepSeek |
 | $ per million tokens, in / out | 0.20 / 0.20 | 0.068 / 0.168 |
 | accuracy score (macro-F1), 5 runs on dev | **0.816 ± 0.007** | 0.775 ± 0.010 |
-| macro-F1 on the held-out test split | **0.758** | 0.647 |
-| accuracy on the held-out test split | **86.2%** | 83.8% |
-| speed (p95 latency at concurrency 16) | **2,087 ms** | 6,119 ms |
-| cost per correct answer | $0.000397 | **$0.00014** |
+| macro-F1 on the held-out test split | **0.758** | 0.727 |
+| accuracy on the held-out test split | **86.2%** | 85.8% |
+| speed (p50 / p95 latency at concurrency 16) | **1,253 / 2,207 ms** | 2,156 / 5,805 ms |
+| cost per correct answer | $0.000398 | **$0.000138** |
 | failed calls | 0.0% | 0.0% |
 
 **The honest summary of that table: Mistral is faster, DeepSeek is cheaper, and on quality I
 cannot separate them on the work that matters.**
 
-The quality columns need reading carefully, because they overstate the gap. On the 253 test
-issues the two models choose the same label 90.9% of the time. Both were right on 204 and both
-wrong on 27. They differ on which one was right for 22 issues, Mistral winning 14 and DeepSeek 8.
-That is a net six issues out of 253, and a paired test on it gives p = 0.29, which is nowhere
-near significant.
+The quality columns need reading carefully, because on the work that matters these two models
+are level. On the 253 test issues they choose the same label 88.9% of the time. Both were right
+on 205 and both wrong on 23. They differ on which one was right for 25 issues, Mistral winning 13
+and DeepSeek 12. A paired test on that gives **p = 1.00**. There is no accuracy difference here
+at all.
 
-The macro-F1 gap of 0.111 looks much larger than that because macro-F1 averages the six classes
-equally, so a class with 3 issues counts as much as one with 121. On the two big classes the
-models are level: bug 0.87 against 0.88, enhancement 0.92 against 0.88. The gap comes almost
-entirely from `documentation` (13 issues) and `other` (3 issues), and **a single issue, #253,
-accounts for about 60% of it.** Mistral got 1 of the 3 `other` issues right and DeepSeek got 0.
+The remaining 0.031 of macro-F1 comes from a single class. Macro-F1 averages the six classes
+equally, so `documentation`, with 13 issues, counts as much as `bug`, with 121. Mistral scores
+0.67 there and DeepSeek 0.46, and that one class more than accounts for the whole gap, because
+the other five very slightly favour DeepSeek.
 
-So I recommend Mistral on speed, not on accuracy. It is 2.9 times faster at p95 and handles 2.25
-times the throughput, and those numbers held across five runs each and again on the test split.
-That is a real difference. Four points of macro-F1 built on sixteen issues is not.
+I ran the full test split twice, and the second run is the better argument for reading that gap
+as noise. Same two models, same 253 issues, temperature 0:
+
+| | first run | second run |
+|---|---|---|
+| Mistral macro-F1 | 0.758 | 0.758 |
+| DeepSeek macro-F1 | 0.647 | **0.727** |
+| gap | 0.111 | **0.031** |
+| paired test | p = 0.29 | **p = 1.00** |
+
+DeepSeek moved 0.080 between two runs of identical work, mostly because it got one of the three
+`other` issues right the second time instead of none. **The gap between the models is smaller
+than the gap between one model and itself.**
+
+So I recommend Mistral on speed, not on accuracy. It is 1.7 times faster at p50 and 2.6 times
+faster at p95, and it held that lead across five dev runs and both test runs. That is a real
+difference. Three points of macro-F1 resting on 13 issues is not.
 
 **When to switch.** Per correct answer DeepSeek costs $0.00014 and Mistral $0.000397, so
 DeepSeek is 2.8 times cheaper per useful output even after its lower accuracy is counted. At a
@@ -265,9 +278,15 @@ expected documentation and enhancement to be confused with each other. They bare
 never once mislabelled documentation as enhancement. The real pattern is that **`bug` leaks into
 everything**, because it is 121 of the 253 test issues and a model that is unsure drifts towards
 it. For Mistral the worst cells are bug→documentation (7), bug→enhancement (5) and bug→question
-(5). Both models also collapse `other`: of three `other` issues Mistral got 1 and DeepSeek got 0,
-and they answered `bug` for most of them. The lesson is that the failure runs from the big class
-into the small ones, not between the two small ones.
+(5). Both models also collapse `other`: of its three test issues each model got one right and
+answered `bug` for the others. The lesson is that the failure runs from the big class into the
+small ones, rather than between the two small ones.
+
+`other` is worth one more sentence, because it is where I would push back on my own headline
+number. Three issues cannot support a per-class F1, and the harness marks the class `thin` for
+that reason. Between my two test runs DeepSeek went from 0 of 3 to 1 of 3 on it, which alone moved
+its macro-F1 by 0.067. Any six-class average on this answer key is partly a report on three
+issues, and that is a limitation of my schema and my dataset size, not of the models.
 
 **Whether writing out reasoning is worth the cost. No, and clearly.**
 `deepseek-r1-distill-llama-70b` cost $0.00148 per call, 18 times the cheapest model, and scored
