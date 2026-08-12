@@ -92,10 +92,10 @@ gold:
 # Model selection runs on dev. The test split is scored once, in the application.
 # Knobs are forwarded as explicit flags rather than left to the environment.
 # LOADENV sources .env *after* make has put its command-line variables into the
-# recipe environment, so `make screen CONCURRENCY=2` was being overwritten by the
-# CONCURRENCY=8 pinned in .env: the run reported the number from .env and measured
-# at it. For a latency comparison that is not a cosmetic bug, it silently attaches
-# your p50/p95 to the wrong concurrency. An explicit --concurrency beats both.
+# recipe environment, so `make screen CONCURRENCY=2` was overwritten by whatever
+# CONCURRENCY .env pins: the run reported .env's number and measured at it. For a
+# latency comparison that is not a cosmetic bug, it silently attaches your p50/p95
+# to a concurrency you did not choose. An explicit --concurrency beats both.
 screen:
 	@$(LOADENV) $(OVERRIDE) $(PY) scripts/screen_models.py --split $(SPLIT) \
 	  $(if $(CONCURRENCY),--concurrency $(CONCURRENCY),) \

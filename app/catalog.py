@@ -41,8 +41,11 @@ class ModelSpec:
 
 # The models being compared. The list is meant to cover a wide range rather than
 # to be complete: sizes from 14B to 397B, models where the whole thing runs on
-# every word against models where only a slice runs, one model that thinks out
-# loud before answering, and a roughly 15x spread in price.
+# every word against models where only a slice runs, models that think out loud
+# before answering against models that do not, and about a 20x spread in list
+# price. On this workload, roughly 1,130 prompt tokens and 18 completion tokens per
+# call, that came out at 18x between the cheapest and dearest model measured:
+# $8.14e-05 for deepseek-4-flash against $0.00148 for deepseek-r1-distill-llama-70b.
 #
 # `why_included` says, in plain words, what question each model is here to answer.
 # It shows up in the UI, so it is written for someone reading the app rather than

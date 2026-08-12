@@ -110,8 +110,9 @@ class ServerlessInferenceClient:
         # this run is actually using and not the env default. This matters: if the
         # pool is smaller than the number of workers, httpx makes them queue for a
         # connection and the p95 I measure is my own waiting, not the provider's.
-        # Reading it from settings would cap a run at concurrency 64 to the pool
-        # implied by CONCURRENCY=8 and quietly ruin every latency number.
+        # Reading it from settings instead would cap a run requested at concurrency
+        # 64 to the pool implied by whatever the default happens to be, and quietly
+        # ruin every latency number in the run.
         limits = httpx.Limits(
             max_connections=max(concurrency * 2, 16),
             max_keepalive_connections=max(concurrency, 8),

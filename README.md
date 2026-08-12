@@ -497,13 +497,15 @@ default.
 | `BASIC_AUTH_USERNAME` | `reviewer` | The login username. |
 | `PROVIDER` | `digitalocean` | Use `digitalocean` for real calls, or `mock` for the offline simulator. |
 | `DO_INFERENCE_BASE_URL` | `https://inference.do-ai.run/v1` | Any endpoint that is compatible with the OpenAI API. |
-| `CONCURRENCY` | `8` | How many requests run at the same time, shared between both models. It can also be changed for each run in the application, so you never need to rebuild the image to change it. |
+| `CONCURRENCY` | `16` | How many requests run at the same time, shared between both models. 16 is measured rather than guessed: throughput rose almost in step with concurrency up to that point with no p95 penalty. It can also be changed per run in the application, so the image never needs rebuilding to change it. |
 | `SCORED_SPLIT` | `test` | Use `test` for the reported score, or `dev` while tuning. |
 | `MAX_ISSUES` | `0` | `0` means all 536 issues. A number above 0 takes an evenly spread sample, which is useful for quick tests. |
 | `REASONING_MAX_TOKENS` | `1400` | How much room to allow models that write out their reasoning. Setting it too low produces `parse_error` results. |
-| `REQUEST_TIMEOUT_S` / `MAX_RETRIES` / `TEMPERATURE` | `60` / `3` / `0` | How long to wait for a reply, how many attempts to make, and how much randomness to allow. |
+| `REQUEST_TIMEOUT_S` / `MAX_RETRIES` / `TEMPERATURE` | `120` / `3` / `0` | How long to wait for a reply, how many attempts to make, and how much randomness to allow. 120 seconds because two models in the catalog have a p95 above one minute, and at 60 they fail as timeouts rather than reporting as slow. |
+| `MAX_TOKENS` | `96` | Output cap for models that answer with bare JSON. Too low and replies are cut off mid-JSON, which shows up as `parse_error` rather than as anything mentioning tokens. |
+| `PORT` | `8080` | The port the server listens on. |
 
-All thirteen settings are documented with their defaults in [`.env.example`](.env.example).
+All the settings are documented with their defaults in [`.env.example`](.env.example).
 
 **A note on the login.** The application sits behind HTTP Basic auth whenever
 `BASIC_AUTH_PASSWORD` is set. The reason is money rather than privacy: `POST /api/run` spends
