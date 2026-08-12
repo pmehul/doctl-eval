@@ -4,6 +4,12 @@ IMAGE ?= doctl-eval:latest
 PORT  ?= 8080
 PY    ?= .venv/bin/python
 
+# Screening knobs. Empty means "leave it to the script's own default", so an unset
+# variable here does not turn into `--concurrency ` on the command line.
+SPLIT       ?= dev
+CONCURRENCY ?=
+MODELS      ?=
+
 # Load .env into the environment for any target that talks to the API.
 #
 # Without this, `make screen` fails with "DO_INFERENCE_API_KEY is not set" even
@@ -27,6 +33,9 @@ help:
 	@echo ""
 	@echo "Evaluation (reads .env automatically):"
 	@echo "  make screen        Test all 11 candidate models on the dev split"
+	@echo "                       MODELS=a,b      only these model ids"
+	@echo "                       CONCURRENCY=n   requests in flight"
+	@echo "                       SPLIT=dev|test  which half of the answer key"
 	@echo "  make serve         Run the app against real Serverless Inference"
 	@echo "  make serve-mock    Run the app against the offline simulator, no key needed"
 	@echo ""
@@ -62,8 +71,16 @@ gold:
 	$(PY) scripts/build_ground_truth.py
 
 # Model selection runs on dev. The test split is scored once, in the application.
+# Knobs are forwarded as explicit flags rather than left to the environment.
+# LOADENV sources .env *after* make has put its command-line variables into the
+# recipe environment, so `make screen CONCURRENCY=2` was being overwritten by the
+# CONCURRENCY=8 pinned in .env: the run reported the number from .env and measured
+# at it. For a latency comparison that is not a cosmetic bug, it silently attaches
+# your p50/p95 to the wrong concurrency. An explicit --concurrency beats both.
 screen:
-	@$(LOADENV) $(PY) scripts/screen_models.py --split dev
+	@$(LOADENV) $(PY) scripts/screen_models.py --split $(SPLIT) \
+	  $(if $(CONCURRENCY),--concurrency $(CONCURRENCY),) \
+	  $(if $(MODELS),--models $(MODELS),)
 
 serve:
 	@$(LOADENV) $(PY) -m uvicorn app.main:app --host 127.0.0.1 --port $(PORT) --reload
