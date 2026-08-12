@@ -1,0 +1,1891 @@
+{
+  "generated_at": "2026-08-12T13:09:09.098026+00:00",
+  "provider": "digitalocean",
+  "simulated": false,
+  "split": "dev",
+  "n_issues": 109,
+  "concurrency": 8,
+  "prompt_version": "v3",
+  "corpus_hash": "18d67e20321158c9",
+  "pricing_source": "https://docs.digitalocean.com/products/inference/details/pricing/",
+  "pricing_verified": "2026-08-07",
+  "wall_clock_s": 2097.283763458996,
+  "results": [
+    {
+      "model_id": "deepseek-4-flash",
+      "label": "DeepSeek V4 Flash",
+      "params": "284B total",
+      "architecture": "moe",
+      "reasoning": false,
+      "usd_per_m_input": 0.068,
+      "usd_per_m_output": 0.168,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 94,
+        "accuracy": 0.8623853211009175,
+        "macro_f1": 0.847296918767507,
+        "macro_f1_excl_templated": 0.8167563025210084,
+        "accuracy_excl_templated": 0.8514851485148515,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 48,
+            "tp": 44,
+            "fp": 4,
+            "fn": 8,
+            "precision": 0.9166666666666666,
+            "recall": 0.8461538461538461,
+            "f1": 0.8799999999999999
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 34,
+            "tp": 30,
+            "fp": 4,
+            "fn": 4,
+            "precision": 0.8823529411764706,
+            "recall": 0.8823529411764706,
+            "f1": 0.8823529411764706
+          },
+          "question": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 6,
+            "fp": 2,
+            "fn": 2,
+            "precision": 0.75,
+            "recall": 0.75,
+            "f1": 0.75
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 9,
+            "tp": 4,
+            "fp": 5,
+            "fn": 1,
+            "precision": 0.4444444444444444,
+            "recall": 0.8,
+            "f1": 0.5714285714285714
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 44,
+            "enhancement": 3,
+            "question": 1,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 2,
+            "enhancement": 30,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 1,
+            "enhancement": 1,
+            "question": 6,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 31.37817145799636,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 3.473752450677703,
+        "latency_ms": {
+          "p50": 2139.5680410059867,
+          "p95": 3199.9513329938054,
+          "p99": 4248.997792004957,
+          "mean": 2230.2873447521933,
+          "max": 5472.671750001609,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 126277,
+          "completion": 1712,
+          "total": 127989,
+          "mean_prompt": 1158.5045871559632,
+          "mean_completion": 15.706422018348624
+        },
+        "cost": {
+          "total_usd": 0.008874452,
+          "per_call_usd": 8.141699082568807e-05,
+          "per_correct_usd": 9.440906382978724e-05,
+          "correct": 94
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "alibaba-qwen3-32b",
+      "label": "Qwen3-32B",
+      "params": "32.8B",
+      "architecture": "dense",
+      "reasoning": true,
+      "usd_per_m_input": 0.25,
+      "usd_per_m_output": 0.55,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 91,
+        "accuracy": 0.8348623853211009,
+        "macro_f1": 0.8349673202614379,
+        "macro_f1_excl_templated": 0.8019607843137255,
+        "accuracy_excl_templated": 0.8217821782178217,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 44,
+            "tp": 40,
+            "fp": 4,
+            "fn": 12,
+            "precision": 0.9090909090909091,
+            "recall": 0.7692307692307693,
+            "f1": 0.8333333333333333
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 34,
+            "tp": 30,
+            "fp": 4,
+            "fn": 4,
+            "precision": 0.8823529411764706,
+            "recall": 0.8823529411764706,
+            "f1": 0.8823529411764706
+          },
+          "question": {
+            "support": 8,
+            "predicted": 9,
+            "tp": 6,
+            "fp": 3,
+            "fn": 2,
+            "precision": 0.6666666666666666,
+            "recall": 0.75,
+            "f1": 0.7058823529411765
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 12,
+            "tp": 5,
+            "fp": 7,
+            "fn": 0,
+            "precision": 0.4166666666666667,
+            "recall": 1.0,
+            "f1": 0.5882352941176471
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 40,
+            "enhancement": 4,
+            "question": 2,
+            "documentation": 6,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 2,
+            "enhancement": 30,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 2,
+            "enhancement": 0,
+            "question": 6,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 5,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 241.92224791699846,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 0.45055798273417585,
+        "latency_ms": {
+          "p50": 15844.153458994697,
+          "p95": 34920.98033300135,
+          "p99": 45408.98662499967,
+          "mean": 17383.79406655133,
+          "max": 46572.69995799288,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 128483,
+          "completion": 37214,
+          "total": 165697,
+          "mean_prompt": 1178.7431192660551,
+          "mean_completion": 341.41284403669727
+        },
+        "cost": {
+          "total_usd": 0.05258845,
+          "per_call_usd": 0.00048246284403669727,
+          "per_correct_usd": 0.0005778950549450549,
+          "correct": 91
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "mistral-3-14B",
+      "label": "Ministral 3 14B",
+      "params": "14B",
+      "architecture": "dense",
+      "reasoning": false,
+      "usd_per_m_input": 0.2,
+      "usd_per_m_output": 0.2,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 95,
+        "accuracy": 0.8715596330275229,
+        "macro_f1": 0.8257003090014884,
+        "macro_f1_excl_templated": 0.7908403708017862,
+        "accuracy_excl_templated": 0.8613861386138614,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 49,
+            "tp": 45,
+            "fp": 4,
+            "fn": 7,
+            "precision": 0.9183673469387755,
+            "recall": 0.8653846153846154,
+            "f1": 0.8910891089108911
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 30,
+            "tp": 29,
+            "fp": 1,
+            "fn": 5,
+            "precision": 0.9666666666666667,
+            "recall": 0.8529411764705882,
+            "f1": 0.90625
+          },
+          "question": {
+            "support": 8,
+            "predicted": 9,
+            "tp": 7,
+            "fp": 2,
+            "fn": 1,
+            "precision": 0.7777777777777778,
+            "recall": 0.875,
+            "f1": 0.823529411764706
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 10,
+            "tp": 4,
+            "fp": 6,
+            "fn": 1,
+            "precision": 0.4,
+            "recall": 0.8,
+            "f1": 0.5333333333333333
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 3,
+            "tp": 2,
+            "fp": 1,
+            "fn": 0,
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 45,
+            "enhancement": 1,
+            "question": 1,
+            "documentation": 5,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 2,
+            "enhancement": 29,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 1
+          },
+          "question": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 7,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 20.469676541004446,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 5.324949799849225,
+        "latency_ms": {
+          "p50": 1247.3021670011804,
+          "p95": 3353.706666996004,
+          "p99": 4996.801166998921,
+          "mean": 1438.3474266880946,
+          "max": 5179.7575840028,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 128397,
+          "completion": 1899,
+          "total": 130296,
+          "mean_prompt": 1177.954128440367,
+          "mean_completion": 17.422018348623855
+        },
+        "cost": {
+          "total_usd": 0.0260592,
+          "per_call_usd": 0.00023907522935779819,
+          "per_correct_usd": 0.0002743073684210526,
+          "correct": 95
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "openai-gpt-oss-120b",
+      "label": "gpt-oss-120b",
+      "params": "~117B total / ~5.1B active",
+      "architecture": "moe",
+      "reasoning": false,
+      "usd_per_m_input": 0.1,
+      "usd_per_m_output": 0.7,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 90,
+        "accuracy": 0.8256880733944955,
+        "macro_f1": 0.813694697737251,
+        "macro_f1_excl_templated": 0.7764336372847012,
+        "accuracy_excl_templated": 0.8118811881188119,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 42,
+            "tp": 39,
+            "fp": 3,
+            "fn": 13,
+            "precision": 0.9285714285714286,
+            "recall": 0.75,
+            "f1": 0.8297872340425532
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 36,
+            "tp": 31,
+            "fp": 5,
+            "fn": 3,
+            "precision": 0.8611111111111112,
+            "recall": 0.9117647058823529,
+            "f1": 0.8857142857142858
+          },
+          "question": {
+            "support": 8,
+            "predicted": 10,
+            "tp": 6,
+            "fp": 4,
+            "fn": 2,
+            "precision": 0.6,
+            "recall": 0.75,
+            "f1": 0.6666666666666665
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 11,
+            "tp": 4,
+            "fp": 7,
+            "fn": 1,
+            "precision": 0.36363636363636365,
+            "recall": 0.8,
+            "f1": 0.5000000000000001
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 39,
+            "enhancement": 5,
+            "question": 3,
+            "documentation": 5,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 1,
+            "enhancement": 31,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 6,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 145.3913877080049,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 1,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 0.7497005270966178,
+        "latency_ms": {
+          "p50": 3101.182583006448,
+          "p95": 5446.737791004125,
+          "p99": 7809.944666994852,
+          "mean": 3281.410058550729,
+          "max": 8847.256208988256,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 133106,
+          "completion": 14528,
+          "total": 147634,
+          "mean_prompt": 1221.1559633027523,
+          "mean_completion": 133.28440366972478
+        },
+        "cost": {
+          "total_usd": 0.0234802,
+          "per_call_usd": 0.00021541467889908258,
+          "per_correct_usd": 0.0002608911111111111,
+          "correct": 90
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "deepseek-r1-distill-llama-70b",
+      "label": "DeepSeek R1 Distill Llama 70B",
+      "params": "70B",
+      "architecture": "dense",
+      "reasoning": true,
+      "usd_per_m_input": 0.99,
+      "usd_per_m_output": 0.99,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 106,
+        "n_failed": 3,
+        "correct": 89,
+        "accuracy": 0.839622641509434,
+        "macro_f1": 0.8123947811447811,
+        "macro_f1_excl_templated": 0.7748737373737373,
+        "accuracy_excl_templated": 0.826530612244898,
+        "n_excl_templated": 98,
+        "per_class": {
+          "bug": {
+            "support": 51,
+            "predicted": 45,
+            "tp": 41,
+            "fp": 4,
+            "fn": 10,
+            "precision": 0.9111111111111111,
+            "recall": 0.803921568627451,
+            "f1": 0.8541666666666666
+          },
+          "enhancement": {
+            "support": 33,
+            "predicted": 33,
+            "tp": 30,
+            "fp": 3,
+            "fn": 3,
+            "precision": 0.9090909090909091,
+            "recall": 0.9090909090909091,
+            "f1": 0.9090909090909091
+          },
+          "question": {
+            "support": 7,
+            "predicted": 5,
+            "tp": 4,
+            "fp": 1,
+            "fn": 3,
+            "precision": 0.8,
+            "recall": 0.5714285714285714,
+            "f1": 0.6666666666666666
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 13,
+            "tp": 4,
+            "fp": 9,
+            "fn": 1,
+            "precision": 0.3076923076923077,
+            "recall": 0.8,
+            "f1": 0.4444444444444444
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 41,
+            "enhancement": 3,
+            "question": 0,
+            "documentation": 7,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 1,
+            "enhancement": 30,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 2,
+            "enhancement": 0,
+            "question": 4,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 1030.728327040997,
+        "requests": 109,
+        "successful_requests": 106,
+        "failed_requests": 3,
+        "retries": 17,
+        "error_rate": 0.027522935779816515,
+        "errors_by_type": {
+          "timeout": 3
+        },
+        "throughput_rps": 0.105750465122964,
+        "latency_ms": {
+          "p50": 45778.977459005546,
+          "p95": 114939.52366699523,
+          "p99": 120033.17387499555,
+          "mean": 54886.50498210095,
+          "max": 120040.98441700626,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 119293,
+          "completion": 43788,
+          "total": 163081,
+          "mean_prompt": 1094.4311926605506,
+          "mean_completion": 401.72477064220186
+        },
+        "cost": {
+          "total_usd": 0.16145019,
+          "per_call_usd": 0.0014811944036697247,
+          "per_correct_usd": 0.0018140470786516853,
+          "correct": 89
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 106
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "gemma-4-31B-it",
+      "label": "Gemma 4 31B",
+      "params": "31B",
+      "architecture": "dense",
+      "reasoning": false,
+      "usd_per_m_input": 0.18,
+      "usd_per_m_output": 0.5,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 91,
+        "accuracy": 0.8348623853211009,
+        "macro_f1": 0.8087856276531231,
+        "macro_f1_excl_templated": 0.7705427531837478,
+        "accuracy_excl_templated": 0.8217821782178217,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 45,
+            "tp": 41,
+            "fp": 4,
+            "fn": 11,
+            "precision": 0.9111111111111111,
+            "recall": 0.7884615384615384,
+            "f1": 0.845360824742268
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 34,
+            "tp": 31,
+            "fp": 3,
+            "fn": 3,
+            "precision": 0.9117647058823529,
+            "recall": 0.9117647058823529,
+            "f1": 0.9117647058823528
+          },
+          "question": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 5,
+            "fp": 3,
+            "fn": 3,
+            "precision": 0.625,
+            "recall": 0.625,
+            "f1": 0.625
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 12,
+            "tp": 4,
+            "fp": 8,
+            "fn": 1,
+            "precision": 0.3333333333333333,
+            "recall": 0.8,
+            "f1": 0.47058823529411764
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 41,
+            "enhancement": 3,
+            "question": 2,
+            "documentation": 6,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 1,
+            "enhancement": 31,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 2,
+            "enhancement": 0,
+            "question": 5,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 27.340884999997797,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 3.986703429680816,
+        "latency_ms": {
+          "p50": 1792.4540829990292,
+          "p95": 3088.0075830064015,
+          "p99": 4363.667917001294,
+          "mean": 1947.8914935786358,
+          "max": 9403.089624989661,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 134279,
+          "completion": 1694,
+          "total": 135973,
+          "mean_prompt": 1231.9174311926606,
+          "mean_completion": 15.541284403669724
+        },
+        "cost": {
+          "total_usd": 0.02501722,
+          "per_call_usd": 0.00022951577981651376,
+          "per_correct_usd": 0.0002749145054945055,
+          "correct": 91
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "llama3.3-70b-instruct",
+      "label": "Llama 3.3 70B Instruct",
+      "params": "70B",
+      "architecture": "dense",
+      "reasoning": false,
+      "usd_per_m_input": 0.65,
+      "usd_per_m_output": 0.65,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 92,
+        "accuracy": 0.8440366972477065,
+        "macro_f1": 0.803535874743305,
+        "macro_f1_excl_templated": 0.7642430496919661,
+        "accuracy_excl_templated": 0.8316831683168316,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 47,
+            "tp": 43,
+            "fp": 4,
+            "fn": 9,
+            "precision": 0.9148936170212766,
+            "recall": 0.8269230769230769,
+            "f1": 0.8686868686868686
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 34,
+            "tp": 30,
+            "fp": 4,
+            "fn": 4,
+            "precision": 0.8823529411764706,
+            "recall": 0.8823529411764706,
+            "f1": 0.8823529411764706
+          },
+          "question": {
+            "support": 8,
+            "predicted": 11,
+            "tp": 7,
+            "fp": 4,
+            "fn": 1,
+            "precision": 0.6363636363636364,
+            "recall": 0.875,
+            "f1": 0.7368421052631579
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 7,
+            "tp": 2,
+            "fp": 5,
+            "fn": 3,
+            "precision": 0.2857142857142857,
+            "recall": 0.4,
+            "f1": 0.3333333333333333
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 43,
+            "enhancement": 2,
+            "question": 3,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 2,
+            "enhancement": 30,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 7,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 2,
+            "question": 0,
+            "documentation": 2,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 141.31806062500982,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 0.7713097640734937,
+        "latency_ms": {
+          "p50": 9063.318208005512,
+          "p95": 13838.650833000429,
+          "p99": 27818.43724999635,
+          "mean": 9992.011579900254,
+          "max": 28903.15825000289,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 128802,
+          "completion": 1669,
+          "total": 130471,
+          "mean_prompt": 1181.6697247706422,
+          "mean_completion": 15.311926605504587
+        },
+        "cost": {
+          "total_usd": 0.08480615,
+          "per_call_usd": 0.0007780380733944953,
+          "per_correct_usd": 0.0009218059782608695,
+          "correct": 92
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "nvidia-nemotron-3-super-120b",
+      "label": "Nemotron 3 Super 120B",
+      "params": "120B",
+      "architecture": "dense",
+      "reasoning": false,
+      "usd_per_m_input": 0.165,
+      "usd_per_m_output": 0.358,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 88,
+        "accuracy": 0.8073394495412844,
+        "macro_f1": 0.7858697430862379,
+        "macro_f1_excl_templated": 0.7430436917034855,
+        "accuracy_excl_templated": 0.7920792079207921,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 45,
+            "tp": 40,
+            "fp": 5,
+            "fn": 12,
+            "precision": 0.8888888888888888,
+            "recall": 0.7692307692307693,
+            "f1": 0.8247422680412372
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 36,
+            "tp": 30,
+            "fp": 6,
+            "fn": 4,
+            "precision": 0.8333333333333334,
+            "recall": 0.8823529411764706,
+            "f1": 0.8571428571428571
+          },
+          "question": {
+            "support": 8,
+            "predicted": 7,
+            "tp": 4,
+            "fp": 3,
+            "fn": 4,
+            "precision": 0.5714285714285714,
+            "recall": 0.5,
+            "f1": 0.5333333333333333
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 11,
+            "tp": 4,
+            "fp": 7,
+            "fn": 1,
+            "precision": 0.36363636363636365,
+            "recall": 0.8,
+            "f1": 0.5000000000000001
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 40,
+            "enhancement": 4,
+            "question": 2,
+            "documentation": 6,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 2,
+            "enhancement": 30,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 2,
+            "enhancement": 2,
+            "question": 4,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 186.22772520800936,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 0.585304899569874,
+        "latency_ms": {
+          "p50": 8220.036124999751,
+          "p95": 34325.13845899666,
+          "p99": 53437.29579199862,
+          "mean": 11773.89541479725,
+          "max": 63891.454082986456,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 133956,
+          "completion": 21938,
+          "total": 155894,
+          "mean_prompt": 1228.954128440367,
+          "mean_completion": 201.26605504587155
+        },
+        "cost": {
+          "total_usd": 0.029956544,
+          "per_call_usd": 0.00027483067889908256,
+          "per_correct_usd": 0.00034041527272727273,
+          "correct": 88
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 107,
+        "loose_scan": 2
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "openai-gpt-oss-20b",
+      "label": "gpt-oss-20b",
+      "params": "~21B total / ~3.6B active",
+      "architecture": "moe",
+      "reasoning": false,
+      "usd_per_m_input": 0.05,
+      "usd_per_m_output": 0.45,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 88,
+        "accuracy": 0.8073394495412844,
+        "macro_f1": 0.7811976286240992,
+        "macro_f1_excl_templated": 0.7374371543489191,
+        "accuracy_excl_templated": 0.7920792079207921,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 44,
+            "tp": 39,
+            "fp": 5,
+            "fn": 13,
+            "precision": 0.8863636363636364,
+            "recall": 0.75,
+            "f1": 0.8125000000000001
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 38,
+            "tp": 31,
+            "fp": 7,
+            "fn": 3,
+            "precision": 0.8157894736842105,
+            "recall": 0.9117647058823529,
+            "f1": 0.861111111111111
+          },
+          "question": {
+            "support": 8,
+            "predicted": 9,
+            "tp": 6,
+            "fp": 3,
+            "fn": 2,
+            "precision": 0.6666666666666666,
+            "recall": 0.75,
+            "f1": 0.7058823529411765
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 8,
+            "tp": 2,
+            "fp": 6,
+            "fn": 3,
+            "precision": 0.25,
+            "recall": 0.4,
+            "f1": 0.3076923076923077
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 39,
+            "enhancement": 6,
+            "question": 2,
+            "documentation": 5,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 2,
+            "enhancement": 31,
+            "question": 0,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 2,
+            "enhancement": 0,
+            "question": 6,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 1,
+            "question": 1,
+            "documentation": 2,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 37.07639891700819,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 2.939875586191248,
+        "latency_ms": {
+          "p50": 2304.353582992917,
+          "p95": 5021.528209006647,
+          "p99": 6256.772916996852,
+          "mean": 2521.911262650974,
+          "max": 6455.460875004064,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 133106,
+          "completion": 14593,
+          "total": 147699,
+          "mean_prompt": 1221.1559633027523,
+          "mean_completion": 133.88073394495413
+        },
+        "cost": {
+          "total_usd": 0.01322215,
+          "per_call_usd": 0.00012130412844036697,
+          "per_correct_usd": 0.00015025170454545454,
+          "correct": 88
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "llama-4-maverick",
+      "label": "Llama 4 Maverick",
+      "params": "400B total / 17B active",
+      "architecture": "moe",
+      "reasoning": false,
+      "usd_per_m_input": 0.2,
+      "usd_per_m_output": 0.696,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 86,
+        "accuracy": 0.7889908256880734,
+        "macro_f1": 0.777483321831148,
+        "macro_f1_excl_templated": 0.7329799861973776,
+        "accuracy_excl_templated": 0.7722772277227723,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 38,
+            "tp": 35,
+            "fp": 3,
+            "fn": 17,
+            "precision": 0.9210526315789473,
+            "recall": 0.6730769230769231,
+            "f1": 0.7777777777777778
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 35,
+            "tp": 31,
+            "fp": 4,
+            "fn": 3,
+            "precision": 0.8857142857142857,
+            "recall": 0.9117647058823529,
+            "f1": 0.8985507246376812
+          },
+          "question": {
+            "support": 8,
+            "predicted": 17,
+            "tp": 7,
+            "fp": 10,
+            "fn": 1,
+            "precision": 0.4117647058823529,
+            "recall": 0.875,
+            "f1": 0.56
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 9,
+            "tp": 3,
+            "fp": 6,
+            "fn": 2,
+            "precision": 0.3333333333333333,
+            "recall": 0.6,
+            "f1": 0.42857142857142855
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 35,
+            "enhancement": 4,
+            "question": 8,
+            "documentation": 5,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 1,
+            "enhancement": 31,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 7,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 1,
+            "documentation": 3,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 49.090267207997385,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 2.2203994029643948,
+        "latency_ms": {
+          "p50": 3340.386875002878,
+          "p95": 5070.557665996603,
+          "p99": 5712.454374996014,
+          "mean": 3531.5019197615425,
+          "max": 5825.2807079989,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 125357,
+          "completion": 1670,
+          "total": 127027,
+          "mean_prompt": 1150.0642201834862,
+          "mean_completion": 15.321100917431192
+        },
+        "cost": {
+          "total_usd": 0.026233720000000002,
+          "per_call_usd": 0.00024067633027522936,
+          "per_correct_usd": 0.00030504325581395353,
+          "correct": 86
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    },
+    {
+      "model_id": "qwen3.5-397b-a17b",
+      "label": "Qwen 3.5 397B A17B",
+      "params": "397B total / 17B active",
+      "architecture": "moe",
+      "reasoning": false,
+      "usd_per_m_input": 0.302,
+      "usd_per_m_output": 1.925,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 1,
+        "n_failed": 108,
+        "correct": 1,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "macro_f1_excl_templated": 1.0,
+        "accuracy_excl_templated": 1.0,
+        "n_excl_templated": 1,
+        "per_class": {
+          "bug": {
+            "support": 0,
+            "predicted": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "enhancement": {
+            "support": 1,
+            "predicted": 1,
+            "tp": 1,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "question": {
+            "support": 0,
+            "predicted": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "documentation": {
+            "support": 0,
+            "predicted": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "security": {
+            "support": 0,
+            "predicted": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "other": {
+            "support": 0,
+            "predicted": 0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 0,
+            "enhancement": 1,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 186.11434724999708,
+        "requests": 109,
+        "successful_requests": 1,
+        "failed_requests": 108,
+        "retries": 218,
+        "error_rate": 0.9908256880733946,
+        "errors_by_type": {
+          "rate_limit": 105,
+          "timeout": 3
+        },
+        "throughput_rps": 0.585661458187242,
+        "latency_ms": {
+          "p50": 1031.0546249966137,
+          "p95": 2848.0002079886617,
+          "p99": 120003.68295800581,
+          "mean": 5397.171072623828,
+          "max": 120004.22741600778,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 1087,
+          "completion": 597,
+          "total": 1684,
+          "mean_prompt": 9.972477064220184,
+          "mean_completion": 5.477064220183486
+        },
+        "cost": {
+          "total_usd": 0.0014774990000000002,
+          "per_call_usd": 1.3555036697247708e-05,
+          "per_correct_usd": 0.0014774990000000002,
+          "correct": 1
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 1
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": true
+    }
+  ]
+}

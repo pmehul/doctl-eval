@@ -190,7 +190,11 @@ CATALOG: tuple[ModelSpec, ...] = (
         context_window=131_072,
         why_included="The best of the models I am allowed to use here. It stands in for the "
                      "expensive model the customer runs today, so I can see what they would "
-                     "give up by switching.",
+                     "give up by switching. Outcome: no score. At concurrency 8 it returned one "
+                     "usable label out of 109 and rate-limited 105 of the rest, so it is "
+                     "unmeasured rather than good or bad. Still worth knowing: a model you "
+                     "cannot get throughput from is not a production option however well it "
+                     "would have scored.",
     ),
     ModelSpec(
         id="deepseek-r1-distill-llama-70b",
@@ -204,21 +208,51 @@ CATALOG: tuple[ModelSpec, ...] = (
         context_window=32_678,
         why_included="This one writes out its thinking before answering, about 30 times "
                      "more text than the others. That costs roughly 45 times more, so it is "
-                     "here to find out whether the thinking is worth paying for.",
+                     "here to find out whether the thinking is worth paying for. Outcome: it is "
+                     "not, at least not for this task. macro-F1 0.812 against the winner's 0.847, "
+                     "for 18x the cost per call and a p95 of 115 seconds, which is close enough "
+                     "to the 120s timeout that some calls failed outright. Sorting six labels is "
+                     "not a problem that rewards deliberation.",
     ),
 )
 
 BY_ID: dict[str, ModelSpec] = {m.id: m for m in CATALOG}
 
-# Defaults for the side-by-side view. These are the two models the README
-# recommends, so the application opens on the recommendation rather than on an
-# arbitrary pair: a cheap sparse workhorse as primary against a near-frontier open
-# weight as the escalation tier. Different vendors and different pretraining
-# lineages, so their errors should decorrelate -- which is what makes
-# model-vs-model disagreement usable as a routing signal. ~3x apart on input price
-# and ~2.75x on output: a real tradeoff, not two sizes of one model.
-DEFAULT_MODEL_A = "openai-gpt-oss-120b"
-DEFAULT_MODEL_B = "qwen3.5-397b-a17b"
+# Defaults for the side-by-side view: the two models the README recommends, so the
+# application opens on the recommendation rather than an arbitrary pair.
+#
+# Chosen from the eleven-model screening run on the 109-issue dev split
+# (data/screening/screening-live-dev-*.md), not picked in advance. The previous
+# defaults were openai-gpt-oss-120b and qwen3.5-397b-a17b, and the measurements
+# retired both: gpt-oss-120b came fourth on macro-F1 at 2.6x the cost of the
+# winner, and qwen3.5-397b-a17b returned one usable label out of 109, failing the
+# rest to rate limiting at concurrency 8.
+#
+#   deepseek-4-flash   macro-F1 0.847   $8.14e-05/call   p95  3200ms   0.0% err
+#   mistral-3-14B      macro-F1 0.826   $2.39e-04/call   p95  3354ms   0.0% err
+#
+# A is primary: best macro-F1 of the field and the cheapest per call at the same
+# time, which is not the usual shape of that tradeoff.
+#
+# B is a hedge rather than an escalation tier, and the distinction is deliberate.
+# The two are level on quality once you look at where the gap comes from: A's
+# 0.021 macro-F1 lead rests on the documentation and other classes, 5 and 2 items
+# each, while B is better on bug, enhancement and question, which is 94 of the 109.
+# Macro-F1 weights all six classes equally, so seven items outvote ninety-four.
+# Calling them indistinguishable is what the evidence supports.
+#
+# What B is really for is independent capacity. 284B MoE against 14B dense, a
+# different vendor and a 20x parameter gap, so a rate-limit event or an outage on
+# one does not take the workload with it. That is not hypothetical here: it is
+# exactly how qwen3.5-397b-a17b failed during screening.
+#
+# No model earned the escalation slot. Every one of the eleven scores between 0.47
+# and 0.59 on documentation, the hardest class, so routing hard cases to a larger
+# model does not fix them. The reasoning models were the clearest test of that and
+# lost outright: deepseek-r1-distill-llama-70b cost 18x the winner for a lower
+# macro-F1, at a p95 of 115 seconds.
+DEFAULT_MODEL_A = "deepseek-4-flash"
+DEFAULT_MODEL_B = "mistral-3-14B"
 
 
 def get(model_id: str) -> ModelSpec:
