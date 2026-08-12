@@ -142,6 +142,22 @@ async def screen_one(
     #
     # A score from too few survivors is not a weak result, it is not a result, so it
     # is labelled rather than left to be read as one.
+    # A percentile needs a sample behind it. p95 over six calls is just the
+    # second-largest of six, and a sweep built on that produced a p95 at concurrency
+    # 4 lower than at concurrency 1, which cannot happen as a real effect. The sweep
+    # looked like a measurement and was noise, so the sample size is checked rather
+    # than assumed. Thirty is the point where the 95th percentile is at least
+    # interpolating between observations instead of naming one of them.
+    n_timed = ops["latency_ms"]["n"]
+    if n_timed < 30:
+        print(
+            f"    WARNING  only {n_timed} timed calls. p95 over a sample this "
+            f"small is close to the maximum and will move by seconds between runs. "
+            f"Raise MAX_ISSUES before reading these percentiles as a latency result.",
+            file=sys.stderr,
+            flush=True,
+        )
+
     n_usable = quality["n_usable"]
     unreliable = n_usable < max(30, 0.5 * len(issues))
     if unreliable:
@@ -186,8 +202,8 @@ def table(results: list[dict], wall_total: float) -> str:
     """Markdown table, ready to paste into the README."""
     header = (
         "| model | params | arch | macro-F1 | macro-F1 excl. templated | accuracy | "
-        "p50 ms | p95 ms | mean out tok | $/call | $/correct | err % |\n"
-        "|---|---|---|---|---|---|---|---|---|---|---|---|\n"
+        "p50 ms | p95 ms | rps | mean out tok | $/call | $/correct | err % |\n"
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|\n"
     )
     lines = []
     for r in results:
@@ -202,13 +218,14 @@ def table(results: list[dict], wall_total: float) -> str:
         if r.get("quality_unreliable"):
             lines.append(
                 "| `{id}` | {params} | {arch}{reason} | **unmeasured** | — | — | "
-                "{p50} | {p95} | {out:.0f} | {pc} | — | {err:.1%} |".format(
+                "{p50} | {p95} | {rps:.2f} | {out:.0f} | {pc} | — | {err:.1%} |".format(
                     id=r["model_id"],
                     params=r["params"],
                     arch=r["architecture"],
                     reason=" · reasoning" if r["reasoning"] else "",
                     p50=f"{o['latency_ms']['p50']:.0f}" if o["latency_ms"]["p50"] else "—",
                     p95=f"{o['latency_ms']['p95']:.0f}" if o["latency_ms"]["p95"] else "—",
+                    rps=o["throughput_rps"],
                     out=o["tokens"]["mean_completion"],
                     pc=f"${o['cost']['per_call_usd']:.3g}",
                     err=o["error_rate"],
@@ -218,7 +235,7 @@ def table(results: list[dict], wall_total: float) -> str:
 
         lines.append(
             "| `{id}`{flag} | {params} | {arch}{reason} | {mf1:.3f} | {mf1x:.3f} | {acc:.1%} | "
-            "{p50} | {p95} | {out:.0f} | {pc} | {pcorr} | {err:.1%} |".format(
+            "{p50} | {p95} | {rps:.2f} | {out:.0f} | {pc} | {pcorr} | {err:.1%} |".format(
                 id=r["model_id"],
                 flag=" ⚠︎ truncated" if r.get("output_truncated") else "",
                 params=r["params"],
@@ -229,6 +246,7 @@ def table(results: list[dict], wall_total: float) -> str:
                 acc=q["accuracy"],
                 p50=f"{o['latency_ms']['p50']:.0f}" if o["latency_ms"]["p50"] else "—",
                 p95=f"{o['latency_ms']['p95']:.0f}" if o["latency_ms"]["p95"] else "—",
+                rps=o["throughput_rps"],
                 out=o["tokens"]["mean_completion"],
                 pc=f"${o['cost']['per_call_usd']:.3g}",
                 pcorr=f"${per_correct:.3g}" if per_correct else "—",
@@ -292,7 +310,12 @@ async def main_async() -> int:
         print(
             f"  -> macro-F1 {r['quality']['macro_f1']:.3f}"
             f"  acc {r['quality']['accuracy']:.1%}"
+            f"  p50 {r['operational']['latency_ms']['p50'] or 0:.0f}ms"
             f"  p95 {r['operational']['latency_ms']['p95'] or 0:.0f}ms"
+            # Throughput is the point of a concurrency sweep and was missing from
+            # this line, which left the sweep unreadable: the knee is where rps
+            # stops climbing while p95 keeps going, and rps was never printed.
+            f"  {r['operational']['throughput_rps']:.2f} rps"
             f"  ${r['operational']['cost']['per_call_usd']:.3g}/call"
             f"  err {r['operational']['error_rate']:.1%}",
             file=sys.stderr,
