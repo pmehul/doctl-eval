@@ -181,3 +181,20 @@ details.explain p { color: #a9b6c5; font-size: 12.5px; margin: 9px 0 0; }
 .eq { background: #0b0e13; border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; margin-top: 11px;
       font-family: ui-monospace, Menlo, monospace; font-size: 12px; white-space: pre-wrap; color: #c8d3e0; }
 .eq .hi { color: #7ee787; }
+
+/* Mode indicator in the header. Always visible, in both modes, so that "live" is
+   stated positively rather than inferred from the absence of a warning. */
+.chip-mode {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  vertical-align: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.chip-live    { background: #12331b; color: #7ee787; border: 1px solid #2d5a34; }
+.chip-sim     { background: #3a2d05; color: #f4d67a; border: 1px solid #6b5410; }
+.chip-unknown { background: var(--card2); color: var(--dim); border: 1px solid var(--line); }

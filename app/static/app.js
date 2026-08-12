@@ -44,7 +44,7 @@ async function boot() {
     fetch("/api/corpus", { cache: "no-store" }).then((r) => r.json()),
   ]);
 
-  if (HEALTH.simulated) $("simBanner").hidden = false;
+  renderMode();
   if (HEALTH.config_problems?.length || !HEALTH.corpus_ok) {
     const b = $("cfgBanner");
     b.hidden = false;
@@ -94,6 +94,38 @@ async function boot() {
     const last = await fetch("/api/result", { cache: "no-store" });
     if (last.ok) { RESULT = await last.json(); renderAll(); }
   } catch { /* no run in this process yet */ }
+}
+
+/* Report the mode from the live health response, never from hardcoded text.
+   Both the chip and the banner wording are built from HEALTH.provider here, so a
+   stale page cannot claim PROVIDER=mock while the server is running for real. The
+   chip is always visible, because a missing warning banner is also what a page
+   that failed to load its JavaScript looks like, and those two situations should
+   not look identical. */
+function renderMode() {
+  const chip = $("modeChip");
+  const provider = HEALTH.provider || "unknown";
+
+  if (HEALTH.simulated) {
+    chip.className = "chip-mode chip-sim";
+    chip.textContent = `SIMULATED · ${provider}`;
+    chip.title = "Offline simulator. Nothing here is measured.";
+    const b = $("simBanner");
+    b.hidden = false;
+    b.innerHTML =
+      `<strong>These numbers are fake.</strong><span>The server reports ` +
+      `<code>PROVIDER=${esc(provider)}</code>, which is the offline simulator. Labels, ` +
+      `timings and token counts are invented. The cost arithmetic is real but it is ` +
+      `being applied to made-up token counts. <em>Nothing on this screen proves ` +
+      `anything.</em> Set <code>PROVIDER=digitalocean</code> and ` +
+      `<code>DO_INFERENCE_API_KEY</code> for real numbers.</span>`;
+  } else {
+    chip.className = "chip-mode chip-live";
+    chip.textContent = `LIVE · ${provider}`;
+    chip.title = "Real inference calls. These numbers are measured.";
+    $("simBanner").hidden = true;
+    $("simBanner").innerHTML = "";
+  }
 }
 
 function wireChips(containerId, fn) {

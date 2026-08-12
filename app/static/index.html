@@ -8,18 +8,26 @@
 </head>
 <body>
 
-<div id="simBanner" class="banner banner-warn" hidden>
-  <strong>These numbers are fake.</strong>
-  <span>PROVIDER=mock. The labels, timings and token counts come from an offline
-  simulator, not from real models. The cost maths is real, but it's being applied to
-  made-up token counts. <em>Nothing on this screen proves anything.</em> Set
-  PROVIDER=digitalocean and DO_INFERENCE_API_KEY for real numbers.</span>
-</div>
+<!-- Deliberately empty. app.js fills this in from the live /api/health response,
+     and the provider name is never written into this file.
+
+     An earlier version hardcoded the simulator's name here as literal text. That
+     was a bad idea: a stale cached copy of this page would name the simulator even
+     when the server was running against real inference, so the page could state
+     something false with total confidence and no amount of looking at it would
+     reveal the problem. Now it can only report what the server just said. -->
+<div id="simBanner" class="banner banner-warn" hidden></div>
 <div id="cfgBanner" class="banner banner-error" hidden></div>
 
 <header>
   <div class="hd-left">
-    <h1>Issue classification &middot; model comparison</h1>
+    <h1>
+      Issue classification &middot; model comparison
+      <!-- Always shown, in both modes. An absent warning banner is weak evidence
+           that things are fine, because it is also what a broken page looks like.
+           This states the mode positively, from the live health response. -->
+      <span id="modeChip" class="chip-mode chip-unknown">checking&hellip;</span>
+    </h1>
     <p class="sub" id="corpusLine">loading corpus&hellip;</p>
   </div>
   <div class="hd-right" id="headlineStrip"></div>
