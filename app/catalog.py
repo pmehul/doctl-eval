@@ -110,7 +110,18 @@ CATALOG: tuple[ModelSpec, ...] = (
         architecture="dense",
         usd_per_m_input=0.25,
         usd_per_m_output=0.55,
-        reasoning=False,
+        # Qwen3 thinks before it answers, so it needs the reasoning token budget.
+        # This was set to False, which handed it the 96-token cap meant for models
+        # that reply with bare JSON. It spent all 96 tokens reasoning and never
+        # reached the JSON: mean output pinned at exactly 96.0 and 49.5% of calls
+        # failed to parse. Given the reasoning budget the same model settles at 359
+        # output tokens and 0.0% errors.
+        #
+        # Worth stating plainly because the consequence was a wrong conclusion, not
+        # a crash: at the 96-token cap it scored macro-F1 0.277 and looked like the
+        # worst model in the field, when what was actually being measured was the
+        # harness truncating it.
+        reasoning=True,
         context_window=32_768,
         why_included="The mid-size model people normally reach for. Here as the sensible "
                      "default that anything else has to beat.",

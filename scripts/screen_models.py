@@ -107,6 +107,30 @@ async def screen_one(
     ops = metrics.operational(rows, wall, concurrency)
     spec = catalog.get(model_id)
 
+    # Flag a model whose replies are being cut off at the token cap.
+    #
+    # Qwen3-32B was miscatalogued as non-reasoning, so it got the 96-token cap meant
+    # for models that answer with bare JSON. It spent the whole budget thinking,
+    # never reached the JSON, and scored macro-F1 0.277 with half its calls
+    # unparseable. Nothing in the output said "truncated"; it just looked like a bad
+    # model, which is the kind of result that quietly becomes a wrong
+    # recommendation.
+    #
+    # The tell is mean output sitting on the cap, since that only happens when
+    # generation is being stopped rather than finishing. Checked here so the harness
+    # says so itself instead of relying on someone noticing the number.
+    cap = settings.reasoning_max_tokens if spec.reasoning else settings.max_tokens
+    mean_out = ops["tokens"]["mean_completion"]
+    truncated = bool(cap) and mean_out >= 0.95 * cap
+    if truncated:
+        print(
+            f"    WARNING  mean output {mean_out:.0f} tokens is at the {cap}-token cap. "
+            f"Replies are being truncated, so this model's scores are not usable. "
+            f"Raise MAX_TOKENS (or mark it reasoning=True in the catalog) and re-run.",
+            file=sys.stderr,
+            flush=True,
+        )
+
     # Whether a model sticks to the format is counted apart from whether it picks
     # the right label. A model that only ever gets through on the last-resort scan
     # is ignoring instructions, which is a risk in production even if it scores well.
@@ -127,6 +151,10 @@ async def screen_one(
         "quality": quality,
         "operational": ops,
         "parse_strategies": strategies,
+        # Recorded, not just printed, so a saved result carries the evidence that
+        # its own numbers are or are not trustworthy.
+        "token_cap": cap,
+        "output_truncated": truncated,
     }
 
 
