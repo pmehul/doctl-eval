@@ -131,6 +131,29 @@ async def screen_one(
             flush=True,
         )
 
+    # Refuse to present a quality score computed from a handful of survivors.
+    #
+    # Scores are calculated over calls that came back, which is the right choice for
+    # a model that fails occasionally and the wrong one for a model that barely
+    # answers at all. qwen3.5-397b-a17b failed 99.1% of its calls, the single reply
+    # that landed happened to be correct, and the table dutifully reported macro-F1
+    # 1.000 and accuracy 100.0%: the best-looking row in the field, from one lucky
+    # answer. Sorting that table by macro-F1 would put the most broken model on top.
+    #
+    # A score from too few survivors is not a weak result, it is not a result, so it
+    # is labelled rather than left to be read as one.
+    n_usable = quality["n_usable"]
+    unreliable = n_usable < max(30, 0.5 * len(issues))
+    if unreliable:
+        print(
+            f"    WARNING  only {n_usable}/{len(issues)} calls returned a label "
+            f"({ops['error_rate']:.1%} errors). The quality scores below are computed "
+            f"from those {n_usable} and mean nothing at this sample size. Treat this "
+            f"model as unmeasured, not as good or bad.",
+            file=sys.stderr,
+            flush=True,
+        )
+
     # Whether a model sticks to the format is counted apart from whether it picks
     # the right label. A model that only ever gets through on the last-resort scan
     # is ignoring instructions, which is a risk in production even if it scores well.
@@ -155,6 +178,7 @@ async def screen_one(
         # its own numbers are or are not trustworthy.
         "token_cap": cap,
         "output_truncated": truncated,
+        "quality_unreliable": unreliable,
     }
 
 
@@ -169,10 +193,34 @@ def table(results: list[dict], wall_total: float) -> str:
     for r in results:
         q, o = r["quality"], r["operational"]
         per_correct = o["cost"]["per_correct_usd"]
+
+        # A row whose scores came from too few survivors, or whose replies were being
+        # truncated, is marked in the table itself. This table gets pasted into the
+        # README, where the warnings printed to the terminal during the run are long
+        # gone, and an unmarked macro-F1 of 1.000 from one lucky answer out of 109 is
+        # the single most misleading thing this file could emit.
+        if r.get("quality_unreliable"):
+            lines.append(
+                "| `{id}` | {params} | {arch}{reason} | **unmeasured** | — | — | "
+                "{p50} | {p95} | {out:.0f} | {pc} | — | {err:.1%} |".format(
+                    id=r["model_id"],
+                    params=r["params"],
+                    arch=r["architecture"],
+                    reason=" · reasoning" if r["reasoning"] else "",
+                    p50=f"{o['latency_ms']['p50']:.0f}" if o["latency_ms"]["p50"] else "—",
+                    p95=f"{o['latency_ms']['p95']:.0f}" if o["latency_ms"]["p95"] else "—",
+                    out=o["tokens"]["mean_completion"],
+                    pc=f"${o['cost']['per_call_usd']:.3g}",
+                    err=o["error_rate"],
+                )
+            )
+            continue
+
         lines.append(
-            "| `{id}` | {params} | {arch}{reason} | {mf1:.3f} | {mf1x:.3f} | {acc:.1%} | "
+            "| `{id}`{flag} | {params} | {arch}{reason} | {mf1:.3f} | {mf1x:.3f} | {acc:.1%} | "
             "{p50} | {p95} | {out:.0f} | {pc} | {pcorr} | {err:.1%} |".format(
                 id=r["model_id"],
+                flag=" ⚠︎ truncated" if r.get("output_truncated") else "",
                 params=r["params"],
                 arch=r["architecture"],
                 reason=" · reasoning" if r["reasoning"] else "",
