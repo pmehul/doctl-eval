@@ -325,7 +325,13 @@ async def main_async() -> int:
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     tag = "sim" if settings.is_mock else "live"
-    stem = f"screening-{tag}-{args.split}-{corpus.corpus_hash}"
+    # Concurrency and corpus size belong in the filename, because they change the
+    # numbers inside it. A sweep varies concurrency and nothing else, so without
+    # them every iteration wrote to the same path and quietly overwrote the one
+    # before: a six-point sweep left one file on disk, the last one, with no way to
+    # tell from the name which point it was. Latency figures are only meaningful
+    # next to the concurrency that produced them, so the name carries it.
+    stem = f"screening-{tag}-{args.split}-c{concurrency}-n{len(issues)}-{corpus.corpus_hash}"
     (OUT_DIR / f"{stem}.json").write_text(
         json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
