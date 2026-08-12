@@ -20,8 +20,18 @@ __pycache__/
 # Build noise
 build.log
 
-# Run output. Regenerated on every run, and can be tens of MB.
-# The folder itself is kept via data/runs/.gitkeep so the app has somewhere to write.
+# Run output. Throwaway runs are ignored, because a full run writes about a megabyte
+# and most of them are scratch.
+#
+# Runs tagged "live" are committed, though. Persisted eval results are one of the
+# requested deliverables, and this pattern had already swallowed the only one: the
+# submission zip is built with `git archive`, which ships tracked files only, so the
+# result would have been missing from the deliverable without anything reporting a
+# problem. Nothing warns you that an ignored file was left out of an archive.
+#
+# Simulated runs stay ignored. They are output from the offline stub and cannot
+# support a recommendation.
 data/runs/*
 !data/runs/.gitkeep
+!data/runs/*-live-*.json
 DigitalOcean FDE Evaluation Exercise.pdf
