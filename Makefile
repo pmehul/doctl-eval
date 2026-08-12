@@ -22,6 +22,23 @@ MODELS      ?=
 # space would then break in ways that are irritating to debug.
 LOADENV = set -a; if [ -f .env ]; then . ./.env; fi; set +a;
 
+# Re-apply anything set explicitly, after .env has been sourced.
+#
+# Sourcing .env overwrites variables that make already placed in the recipe
+# environment, so .env quietly beat the command line. `MAX_ISSUES=40 make screen`
+# ran all 536 issues because .env pins MAX_ISSUES=0, and `make screen
+# CONCURRENCY=2` measured at the 8 pinned in .env while reporting 8. Neither
+# failed; they just did something other than what was asked, which is the worst
+# way for a knob to be wrong when the output is a latency and cost comparison.
+#
+# Precedence is now the usual one for dotenv files: an explicit setting wins, and
+# .env supplies defaults for everything else. Make imports the ambient environment
+# as variables too, so `export MAX_ISSUES=40` in the shell also wins.
+ENV_KNOBS = PROVIDER CONCURRENCY MAX_ISSUES PERSIST_RUNS SCORED_SPLIT \
+            REQUEST_TIMEOUT_S MAX_RETRIES MAX_TOKENS REASONING_MAX_TOKENS \
+            TEMPERATURE RUNS_DIR
+OVERRIDE = env $(foreach v,$(ENV_KNOBS),$(if $($(v)),$(v)='$($(v))'))
+
 help:
 	@echo "First time:"
 	@echo "  make install       Create .venv and install dependencies"
@@ -65,7 +82,7 @@ env:
 
 # Set GITHUB_TOKEN to raise the API rate limit from 60/hr to 5000/hr.
 ingest:
-	@$(LOADENV) $(PY) scripts/ingest_issues.py
+	@$(LOADENV) $(OVERRIDE) $(PY) scripts/ingest_issues.py
 
 gold:
 	$(PY) scripts/build_ground_truth.py
@@ -78,12 +95,12 @@ gold:
 # at it. For a latency comparison that is not a cosmetic bug, it silently attaches
 # your p50/p95 to the wrong concurrency. An explicit --concurrency beats both.
 screen:
-	@$(LOADENV) $(PY) scripts/screen_models.py --split $(SPLIT) \
+	@$(LOADENV) $(OVERRIDE) $(PY) scripts/screen_models.py --split $(SPLIT) \
 	  $(if $(CONCURRENCY),--concurrency $(CONCURRENCY),) \
 	  $(if $(MODELS),--models $(MODELS),)
 
 serve:
-	@$(LOADENV) $(PY) -m uvicorn app.main:app --host 127.0.0.1 --port $(PORT) --reload
+	@$(LOADENV) $(OVERRIDE) $(PY) -m uvicorn app.main:app --host 127.0.0.1 --port $(PORT) --reload
 
 serve-mock:
 	@PROVIDER=mock $(PY) -m uvicorn app.main:app --host 127.0.0.1 --port $(PORT) --reload
@@ -100,7 +117,7 @@ docker-run:
 	docker run --rm -p $(PORT):8080 --env-file .env -v "$$PWD/data/runs:/app/data/runs" $(IMAGE)
 
 verify:
-	@$(LOADENV) $(PY) scripts/verify.py
+	@$(LOADENV) $(OVERRIDE) $(PY) scripts/verify.py
 
 clean:
 	rm -rf __pycache__ app/__pycache__ scripts/__pycache__ .pytest_cache
