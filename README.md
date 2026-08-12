@@ -19,10 +19,15 @@ method does not depend on doctl, on these six categories, or on DigitalOcean, an
 portability matters because the customer will want to apply the same method to their other
 repositories next.
 
-**My recommendation is to send every issue to gpt-oss-120b, and to send only the difficult
-issues on to qwen3.5-397b-a17b for a second opinion.** Both models are hosted by
-DigitalOcean, so the customer keeps one provider and one API key. I explain the reasoning
-below.
+**My recommendation is to send every issue to `mistral-3-14B`, and to switch to
+`deepseek-4-flash` once volume passes roughly ten million classifications a month.** Both are
+hosted by DigitalOcean, so the customer keeps one provider and one API key. I explain the
+reasoning below.
+
+That is not the recommendation I expected to make. I began with a plan to run a cheap model on
+everything and escalate the hard issues to a large one. The measurements killed that plan, and
+the section on trade-offs says exactly how, because I wrote down in advance the result that
+would make me abandon it.
 
 One point before anything else: the application in this repository *is* the test. Every number
 shown in the application is produced by the code here. I did not calculate results separately
@@ -30,23 +35,25 @@ and paste them in.
 
 ## Please read this before you read any numbers
 
-Any figure marked `‹PENDING›` requires a Serverless Inference API key, and I did not have one
-while I was building this. The only mode I have run from start to finish is the built-in
-simulator, which invents the model replies so that I could test the harness without a key.
+Every figure below comes from real calls to DigitalOcean Serverless Inference. Around 4,000 of
+them, for about $1.30. Saved results are named `-live-`, and a file named `-sim-` came from the
+offline simulator and is not evidence. There are none of those left in this repository.
 
-**The simulator's numbers are worthless, and I am not going to present them as if they were
-real.** The simulator contains my own guesses about which models perform better, so if its
-results agree with my recommendation, that agreement proves nothing, because I wrote both the
-guesses and the recommendation. I have made the simulated mode hard to mistake for a real one.
-The application displays a warning banner while the simulator is active, saved result files are
-named `-sim-` instead of `-live-`, and the generated comparison tables carry the header
-"SIMULATED, not evidence".
+One thing matters more than any single number here, so I want it stated before the results
+rather than buried after them. **A run is not reproducible, even at temperature 0.** I ran the
+same model over the same 109 issues six times and got macro-F1 between 0.774 and 0.810. One
+configuration produced 0.847 on one occasion and 0.774 on another. A hosted endpoint batches
+work across requests, and that changes the arithmetic slightly, so identical inputs do not give
+identical outputs.
 
-A good deal of this work is finished and does not depend on that missing run. The dataset is
-final. The correct answers are written, along with the reasoning behind each one. The shortlist
-of models is decided, and I can explain why each model is on it. Every price is recorded, and
-the cost formula is complete. Those are the parts of this exercise I would defend most firmly
-in any case.
+The consequence is uncomfortable. My first screening run ranked eleven models by macro-F1 to
+three decimal places, first place 0.847 down to tenth 0.777, a spread of 0.070. Repeated
+measurement then showed a single model varying by 0.036 on its own. **The noise was about as
+wide as the entire ranking**, so most of that ordering was meaningless, and the top two were in
+the wrong order. The model I now recommend was third in that table.
+
+So every quality claim below rests on five runs per model, and I say plainly where a difference
+is too small to call. Where I can only offer one run, I say that too.
 
 ## The models I tested
 
@@ -54,8 +61,15 @@ I tested eleven models.
 
 The exercise credits only work on models that DigitalOcean hosts itself, so every model here is
 open-weight. That means I have no direct comparison against a frontier model, and I am not
-claiming one. Instead, `qwen3.5-397b-a17b` acts as a substitute for whatever expensive model the
-customer is paying for today.
+claiming one. `qwen3.5-397b-a17b` was meant to stand in for whatever expensive model the customer
+pays for today, and it could not: it returned one usable answer out of 109 and rate-limited the
+rest. So I have no proxy for the frontier tier at all, and I say what follows without one.
+
+That is less of a hole than it sounds. The customer's question is whether a cheaper model is good
+enough, and the strongest evidence for "yes" is that the models here are indistinguishable from
+*each other* across a 20x range of size and a 3.5x range of price. When a 14B model matches a
+284B model on a task, the task is not what is limiting the result, and buying a larger model is
+unlikely to change it.
 
 I was not trying to test every available model. I was trying to cover a wide range, so that
 whichever model won, I would understand the reason it won. The eleven therefore span three
@@ -111,78 +125,113 @@ margin I will change my recommendation, but only as far as using it on the diffi
 
 ## What I recommend
 
-**Send every issue to gpt-oss-120b. Send only the difficult issues on to qwen3.5-397b-a17b.**
+**Run `mistral-3-14B` on everything. Move to `deepseek-4-flash` when volume makes the price
+difference matter.**
 
-Most issues are straightforward, so the cheap model should handle them. When the cheap model is
-not confident, or when a wrong answer would be expensive, such as a security report, that
-single issue is passed to the larger model for a second opinion.
-
-The structure of this arrangement matters more than the two particular models I have named. The
-expensive model acts as a safety net and never as the default. Sending every issue to a frontier
-model is precisely the mistake the customer is making now, so any recommendation that keeps
-doing so has failed to answer their question. The arrangement is affordable only because the
-expensive model never sees more than the small number of difficult issues.
-
-|  | main model | second opinion |
+|  | recommended | cheaper alternative |
 |---|---|---|
-| model | `openai-gpt-oss-120b` | `qwen3.5-397b-a17b` |
-| size | ~117B total, ~5.1B active | 397B total, ~17B active |
-| built by | OpenAI (open weight) | Alibaba |
-| $ per million tokens, in / out | 0.10 / 0.70 | 0.302 / 1.925 |
-| accuracy score (macro-F1) | `‹PENDING›` | `‹PENDING›` |
-| speed (p95 latency) | `‹PENDING›` | `‹PENDING›` |
-| cost per correct answer | `‹PENDING›` | `‹PENDING›` |
+| model | `mistral-3-14B` | `deepseek-4-flash` |
+| size | 14B dense | 284B total, MoE |
+| built by | Mistral AI | DeepSeek |
+| $ per million tokens, in / out | 0.20 / 0.20 | 0.068 / 0.168 |
+| accuracy score (macro-F1), 5 runs on dev | **0.816 ± 0.007** | 0.775 ± 0.010 |
+| macro-F1 on the held-out test split | **0.758** | 0.647 |
+| accuracy on the held-out test split | **86.2%** | 83.8% |
+| speed (p95 latency at concurrency 16) | **2,087 ms** | 6,119 ms |
+| cost per correct answer | $0.000397 | **$0.00014** |
+| failed calls | 0.0% | 0.0% |
 
-**Why these two models are not simply two sizes of the same thing.** Both models run only part
-of their network for each word, which is how models of this size stay inexpensive. The part
-that runs is what determines their capability, and there the two differ considerably:
-gpt-oss-120b runs about 5.1 billion parameters per word, while qwen3.5-397b runs about 17
-billion. The second model therefore does roughly 3.3 times as much work per word as the first,
-which is a genuine difference in capability and not a minor revision.
+**The honest summary of that table: Mistral is faster, DeepSeek is cheaper, and on quality I
+cannot separate them on the work that matters.**
 
-**Why I chose two models from different companies.** This is the decision the rest of the
-design depends on, so it is worth being explicit about. My plan escalates an issue to the
-second model whenever the two models disagree with each other. Two models from the same family
-tend to make the same mistakes, which means they would agree with each other even when both
-were wrong, and their agreement would then tell me nothing useful. Two models from different
-companies, trained on different data, are more likely to fail on different issues, and that
-independence is what makes their disagreement a usable signal. Choosing two companies also
-means that an outage or a retirement at one company cannot disable both models at once.
+The quality columns need reading carefully, because they overstate the gap. On the test split
+the two models agree on 92% of issues, and of 253 issues both were right on 204 and both wrong
+on 27. They differ on 22, Mistral winning 14 and DeepSeek 8. That is a net six issues out of
+253, and a paired test on it gives p = 0.29, which is nowhere near significant.
+
+The macro-F1 gap of 0.111 looks much larger than that because macro-F1 averages the six classes
+equally, so a class with 3 issues counts as much as one with 121. On the two big classes the
+models are level: bug 0.87 against 0.88, enhancement 0.92 against 0.88. The gap comes almost
+entirely from `documentation` (13 issues) and `other` (3 issues), and **a single issue, #253,
+accounts for about 60% of it.** Mistral got 1 of the 3 `other` issues right and DeepSeek got 0.
+
+So I recommend Mistral on speed, not on accuracy. It is 2.9 times faster at p95 and handles 2.25
+times the throughput, and those numbers held across five runs each and again on the test split.
+That is a real difference. Four points of macro-F1 built on sixteen issues is not.
+
+**When to switch.** Per correct answer DeepSeek costs $0.00014 and Mistral $0.000397, so
+DeepSeek is 2.8 times cheaper per useful output even after its lower accuracy is counted. At a
+million classifications a month that is $81 against $239, and the $158 difference does not
+justify giving up half your latency. At a hundred million it is $8,140 against $23,900, and the
+argument reverses. The crossover is somewhere around ten million a month, and I would move at
+that point rather than earlier.
+
+**Why two models from different companies.** An outage or a rate limit at one company should not
+stop the workload. That is not a hypothetical: during screening `qwen3.5-397b-a17b` failed 105
+of 109 calls to rate limiting at concurrency 8, and returned one usable answer. A recommendation
+resting on a single provider has no answer to that. 14B dense against 284B mixture-of-experts,
+two companies, two architectures, so their capacity limits are unrelated.
 
 ## The trade-offs I am making
 
-**I am trading quality against cost.** The second model costs about three times as much as the
-first for input and about 2.75 times as much for output. Paying that premium on every issue
-would be indefensible. Paying it only on the issues where the two models disagree is cheap: if
-they disagree on 20% of issues, then the blended cost is `0.8 × main + 0.2 × (main + second)`.
-This is the reason the expensive model only needs to have a bounded price rather than a low one.
+Three of these were predictions with a number attached, written before I had results. All three
+have now been settled, and two of them went against me. I have left them as they were rather
+than quietly editing the prediction to match the outcome.
 
-**I am trading simplicity against coverage.** Running two models is more work to operate than
-running one, and I would abandon the second model immediately if the evidence did not support
-keeping it. So I have written down in advance the result that would make me abandon it: **if the
-two models score within about 0.03 of each other, then the second opinion is not earning its
-cost.** In that case I would run gpt-oss-120b alone and send the low-confidence issues to a
-person instead, which is both cheaper and simpler to operate.
+**I said I would abandon the second opinion if the two models scored within 0.03 of each other.
+They did, so I abandoned it.** That was the plan the whole design was built around: cheap model
+on everything, hard issues escalated to a large one. It does not survive the measurements. The
+top six models sit inside a 0.07 band that is no wider than one model's own run-to-run noise, so
+there is no larger model here that is reliably better to escalate *to*. Worse, every one of the
+eleven scores between 0.44 and 0.67 on `documentation`, the hardest real class. The models fail
+on the same issues, which is exactly the case where a second model adds cost and no information.
+Hard issues need a person or a better prompt, not more parameters. I would run one model and
+route low-confidence issues to a human.
 
-**I am trading cost against quality at the margin.** There is a second result I have committed
-to in advance. **If `deepseek-4-flash` scores within about 0.02 of gpt-oss-120b, then it should
-replace gpt-oss-120b as the main model purely on price.** It costs $0.068 per million input
-tokens and $0.168 per million output tokens, which is 68% of gpt-oss-120b's input price and 24%
-of its output price. On this workload, where a typical request uses about 1,120 input tokens and
-22 output tokens, that works out at roughly 40% less per call.
+**I said `deepseek-4-flash` should replace the main model on price if it came within 0.02.**
+Against Mistral it is 0.041 behind on the dev split with no overlap across five runs each, so on
+my own rule it does not qualify as an equal-quality substitute today. It becomes the right choice
+on volume instead, for the cost reason above, and that is a different argument from the one I
+expected to be making.
 
-**I am trading speed against volume.** Concurrency is the setting that controls this, and it
-means the number of requests being processed at the same time. It is a real trade-off rather
-than a number to maximise. The pattern is reliable even though I cannot yet give the exact
-figures, which are `‹PENDING›`: as concurrency rises, the number of requests completed per
-second stops improving while the time each individual request takes keeps getting worse, and
-rate-limit errors begin to appear. Beyond that point you are giving up reliability in exchange
-for time you no longer save. For an overnight bulk job you should push past that point and
-accept the slower individual requests. For live triage where you have promised someone a
-response time, you should stay below it. This is also why the application always displays the
-p50 and p95 latency figures next to the concurrency at which they were measured, because a
-latency figure on its own, without knowing how hard the system was being pushed, cannot be acted
-on.
+**I said reasoning models were very unlikely to be worth paying for. That one held.**
+`deepseek-r1-distill-llama-70b` cost $0.00148 per call, 18 times the cheapest model, for a lower
+macro-F1 of 0.812, at a p95 of 115 seconds against a 120-second timeout, which is why three of
+its calls failed outright. Sorting six labels does not reward deliberation.
+
+**I am trading speed against volume.** Concurrency controls this: how many requests are in
+flight at once. I expected the familiar curve, where throughput flattens, individual requests
+slow down and rate-limit errors start. **I did not find it.**
+
+| concurrency | 1 | 2 | 4 | 8 | 16 |
+|---|---|---|---|---|---|
+| requests per second | 0.35 | 0.81 | 1.22 | 2.62 | 5.80 |
+| p95 latency (ms) | 5,806 | 5,618 | 5,218 | 7,412 | 3,794 |
+
+Throughput rose almost in step with concurrency across a 16x range, p95 did not degrade, and
+there were no rate-limit errors at all. So the ceiling I hit was my own setting, not the
+provider's capacity, and I have no measured saturation point to report.
+
+I stopped at 16 rather than guessing higher, because above that the measurement stops being
+honest. 109 issues at concurrency 128 puts every request in flight at once, the corpus runs out,
+and wall-clock collapses to the duration of the slowest single call: I measured 5.4 seconds of
+wall-clock against a 5.4 second slowest call. That is a burst, not sustained throughput, and
+printing it in the same column as the lower numbers would invite a comparison it cannot support.
+The harness now refuses to, and warns instead.
+
+I recommend concurrency 16 on that basis: the highest level this corpus can measure properly,
+with at least seven full waves of requests behind every figure. A larger corpus would very
+likely justify more.
+
+One number from the sweep is worth keeping for operational reasons. At concurrency 32 a single
+retry stretched wall-clock from about 15 seconds to 64 and dropped measured throughput from 15.6
+to 1.7 requests per second, while p50, p95 and the slowest call all looked completely normal.
+Retry backoff is charged to wall-clock and to nothing else, so one retry in 109 calls moved the
+headline throughput figure by a factor of nine. The application reports retries next to
+throughput for that reason.
+
+This is also why the application always shows p50 and p95 beside the concurrency they were
+measured at. A latency figure without the load that produced it cannot be acted on.
 
 **I am trading the value of reasoning against the cost of reasoning.** I covered the figures
 above: roughly 45 times the output cost, and a p95 latency measured in whole seconds, to choose
@@ -197,28 +246,42 @@ of this document.
 
 ## What the test showed
 
-`‹PENDING — to be filled in from data/screening/screening-live-dev-*.md and the final run›`
+I screened eleven models on 109 development issues, then ran the two finalists over all 536
+issues, scoring against the 253 held-back test issues. The full table is in
+`data/screening/`, the final run is in `data/runs/`, and `make screen` regenerates it. These
+were the four things I set out to learn.
 
-Running `make screen` regenerates the comparison table. When I have real numbers, these are the
-four things I will be looking for, and why each one matters.
+**Where the line between price and quality bends. It bends immediately.** The top six models sit
+between 0.777 and 0.847 macro-F1, and a single model repeated six times varies by 0.036 on its
+own. The band is no wider than the noise, so I cannot rank the models inside it, and the answer
+to the customer's question is not "buy the best one". Nothing here justifies paying more for
+quality, so the choice comes down to speed and price, which I *can* measure apart. The cheapest
+model in the field, `deepseek-4-flash` at $0.068 per million input tokens, is among the best on
+quality.
 
-**Where the line between price and quality bends.** The useful answer is not the best model. It
-is the cheapest model that performs as well as the best one, because that is what the customer's
-question about overpaying actually comes down to.
+**Whether the small categories hold up. They do not, and not in the way I predicted.** I
+expected documentation and enhancement to be confused with each other. They barely are: Mistral
+never once mislabelled documentation as enhancement. The real pattern is that **`bug` leaks into
+everything**, because it is 121 of the 253 test issues and a model that is unsure drifts towards
+it. For Mistral the worst cells are bug→documentation (7), bug→enhancement (5) and bug→question
+(5). Both models also collapse `other`: of three `other` issues Mistral got 1 and DeepSeek got 0,
+and they answered `bug` for most of them. The lesson is that the failure runs from the big class
+into the small ones, not between the two small ones.
 
-**Whether the small categories hold up.** I expect documentation and enhancement to be the
-categories most often confused with each other, because a request such as "add this to the help
-text" is a documentation change written in the style of a feature request. I expect question and
-enhancement to be the next most confused pair, because "does it support X?" and "please add X"
-are the same sentence with different intentions behind them. The prompt contains rules for both
-of these cases, and the application highlights any square in the results grid that accounts for
-15% or more of a category, so that a problem of this kind gets named rather than guessed at.
+**Whether writing out reasoning is worth the cost. No, and clearly.**
+`deepseek-r1-distill-llama-70b` cost $0.00148 per call, 18 times the cheapest model, and scored
+0.812 macro-F1 against the leader's 0.847. Its p95 latency was 115 seconds against a 120-second
+timeout, which is why three calls failed outright. Choosing one word from a list of six does not
+reward deliberation.
 
-**Whether writing out reasoning is worth the cost.** I expect a clear answer of no.
-
-**Whether any model cannot follow the required output format.** A model that fails in this way
-shows up as a count of `parse_error` results rather than as unexplained low accuracy, because I
-record format failures separately from wrong answers.
+**Whether any model cannot follow the output format. Almost all of them can, and the one
+apparent disaster was mine.** Nine of the eleven returned clean JSON on all 109 calls with no
+fallback parsing. Only `nvidia-nemotron-3-super-120b` needed the last-resort text scan, twice.
+`alibaba-qwen3-32b` initially failed to parse on 49.5% of calls, and that was my bug, not its
+behaviour: I had catalogued it as a non-reasoning model, so it received a 96-token output budget,
+spent all 96 thinking and never reached the JSON. Given room it produces valid JSON on 109 of 109
+and scores 0.835. **On the original numbers I would have thrown out a competitive model for being
+bad at a task it was never allowed to finish.**
 
 ### What I already know without that run
 
@@ -460,8 +523,12 @@ database, which is more machinery than an evaluation harness needs.
 ## What I did not do, and why
 
 **I did not compare against a frontier model.** The credits do not cover Claude or GPT-5.x, so
-the question of whether the customer is overpaying is answered within the range of models the
-credits reach, using qwen3.5-397b as the substitute for the top of that range.
+the question of whether the customer is overpaying is answered inside the range the credits
+reach. I had intended `qwen3.5-397b-a17b` to represent the top of that range, and it rate-limited
+105 of 109 calls, so I have no stand-in for the expensive tier either. What I can say is that
+across the ten models I *could* measure, spanning 14B to 284B and a 3.5x price range, quality
+differences were inside run-to-run noise. That does not prove a frontier model would add nothing.
+It does mean nothing in this field showed a size-related advantage worth paying for.
 
 **I did not have a second person check the answer key.** One person wrote it in a single pass,
 so I have no measurement of how often two people would agree. This is the answer key's greatest
