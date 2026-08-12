@@ -34,7 +34,7 @@ help:
 	@echo "  make docker        Build the image"
 	@echo "  make docker-run    Run the image"
 	@echo ""
-	@echo "  make verify        Run the 43 invariant checks"
+	@echo "  make verify        Run the invariant checks"
 
 venv:
 	python3 -m venv .venv
@@ -71,8 +71,13 @@ serve:
 serve-mock:
 	@PROVIDER=mock $(PY) -m uvicorn app.main:app --host 127.0.0.1 --port $(PORT) --reload
 
+# --load matters on any machine where buildx defaults to the docker-container
+# driver, which is the norm on Docker Desktop. Without it the build succeeds, warns
+# "build result will only remain in the build cache", and leaves nothing for
+# `docker run` to find, so `make docker && make docker-run` fails on a missing
+# image after an apparently clean build.
 docker:
-	docker build -t $(IMAGE) .
+	docker build --load -t $(IMAGE) .
 
 docker-run:
 	docker run --rm -p $(PORT):8080 --env-file .env -v "$$PWD/data/runs:/app/data/runs" $(IMAGE)
