@@ -42,4 +42,6 @@ DigitalOcean FDE Evaluation Exercise.pdf
 mehul_interview.txt
 mehul_presentation.txt
 mehul_presentation.pptx
+# PowerPoint lock files, created while the deck is open
+~$*
 scripts/_build_deck.py
