@@ -149,6 +149,39 @@ async def screen_one(
     # looked like a measurement and was noise, so the sample size is checked rather
     # than assumed. Thirty is the point where the 95th percentile is at least
     # interpolating between observations instead of naming one of them.
+    # Sustained throughput needs the queue to reach a steady state, which needs
+    # several times more requests than the concurrency. With 109 issues at
+    # concurrency 128 every request is in flight at once, the corpus runs out, and
+    # wall-clock collapses to the duration of the slowest single call: measured
+    # wall was 5.4s against a 5.4s maximum latency. That is a burst, and reporting
+    # it as requests per second invites a comparison against the lower levels that
+    # the number cannot support.
+    waves = len(issues) / concurrency if concurrency else 0
+    if waves < 3:
+        print(
+            f"    WARNING  {len(issues)} calls at concurrency {concurrency} is "
+            f"{waves:.1f} waves. The queue never reaches steady state, so "
+            f"{ops['throughput_rps']:.2f} rps is a burst rate and is not comparable "
+            f"with lower concurrency levels. Use a larger split to measure this.",
+            file=sys.stderr,
+            flush=True,
+        )
+
+    # A retry costs its backoff, and the backoff lands on wall-clock rather than on
+    # the latency of any single call. At concurrency 32 one retry stretched wall from
+    # roughly 15s to 64s and took throughput from about 15 rps to 1.70, while p50,
+    # p95 and max all looked ordinary. Retries are surfaced next to throughput
+    # because they are usually the reason it disagrees with the latencies.
+    if ops["retries"]:
+        print(
+            f"    NOTE  {ops['retries']} retry(ies) occurred. Backoff is charged to "
+            f"wall-clock, so throughput understates what the endpoint served: "
+            f"wall {ops['wall_clock_s']:.1f}s against a slowest call of "
+            f"{(ops['latency_ms']['max'] or 0) / 1000:.1f}s.",
+            file=sys.stderr,
+            flush=True,
+        )
+
     n_timed = ops["latency_ms"]["n"]
     if n_timed < 30:
         print(

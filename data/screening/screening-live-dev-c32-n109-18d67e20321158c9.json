@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T13:28:54.738035+00:00",
+  "generated_at": "2026-08-12T13:39:06.094961+00:00",
   "provider": "digitalocean",
   "simulated": false,
   "split": "dev",
@@ -9,7 +9,7 @@
   "corpus_hash": "18d67e20321158c9",
   "pricing_source": "https://docs.digitalocean.com/products/inference/details/pricing/",
   "pricing_verified": "2026-08-07",
-  "wall_clock_s": 7.075496833000216,
+  "wall_clock_s": 64.04145579200122,
   "results": [
     {
       "model_id": "deepseek-4-flash",
@@ -23,42 +23,42 @@
         "n_scored": 109,
         "n_usable": 109,
         "n_failed": 0,
-        "correct": 92,
-        "accuracy": 0.8440366972477065,
-        "macro_f1": 0.7894179894179895,
-        "macro_f1_excl_templated": 0.7473015873015874,
-        "accuracy_excl_templated": 0.8316831683168316,
+        "correct": 90,
+        "accuracy": 0.8256880733944955,
+        "macro_f1": 0.799575229152694,
+        "macro_f1_excl_templated": 0.7594902749832327,
+        "accuracy_excl_templated": 0.8118811881188119,
         "n_excl_templated": 101,
         "per_class": {
           "bug": {
             "support": 52,
-            "predicted": 47,
-            "tp": 44,
-            "fp": 3,
-            "fn": 8,
-            "precision": 0.9361702127659575,
-            "recall": 0.8461538461538461,
-            "f1": 0.8888888888888888
+            "predicted": 46,
+            "tp": 42,
+            "fp": 4,
+            "fn": 10,
+            "precision": 0.9130434782608695,
+            "recall": 0.8076923076923077,
+            "f1": 0.8571428571428572
           },
           "enhancement": {
             "support": 34,
-            "predicted": 36,
-            "tp": 31,
-            "fp": 5,
-            "fn": 3,
-            "precision": 0.8611111111111112,
-            "recall": 0.9117647058823529,
-            "f1": 0.8857142857142858
+            "predicted": 37,
+            "tp": 30,
+            "fp": 7,
+            "fn": 4,
+            "precision": 0.8108108108108109,
+            "recall": 0.8823529411764706,
+            "f1": 0.8450704225352113
           },
           "question": {
             "support": 8,
             "predicted": 7,
-            "tp": 4,
-            "fp": 3,
-            "fn": 4,
-            "precision": 0.5714285714285714,
-            "recall": 0.5,
-            "f1": 0.5333333333333333
+            "tp": 5,
+            "fp": 2,
+            "fn": 3,
+            "precision": 0.7142857142857143,
+            "recall": 0.625,
+            "f1": 0.6666666666666666
           },
           "documentation": {
             "support": 5,
@@ -93,16 +93,16 @@
         },
         "confusion_matrix": {
           "bug": {
-            "bug": 44,
-            "enhancement": 1,
-            "question": 2,
+            "bug": 42,
+            "enhancement": 4,
+            "question": 1,
             "documentation": 5,
             "security": 0,
             "other": 0
           },
           "enhancement": {
-            "bug": 1,
-            "enhancement": 31,
+            "bug": 2,
+            "enhancement": 30,
             "question": 1,
             "documentation": 1,
             "security": 0,
@@ -110,8 +110,8 @@
           },
           "question": {
             "bug": 1,
-            "enhancement": 3,
-            "question": 4,
+            "enhancement": 2,
+            "question": 5,
             "documentation": 0,
             "security": 0,
             "other": 0
@@ -144,34 +144,34 @@
       },
       "operational": {
         "concurrency": 32,
-        "wall_clock_s": 7.002504417003365,
+        "wall_clock_s": 63.959929167001974,
         "requests": 109,
         "successful_requests": 109,
         "failed_requests": 0,
-        "retries": 0,
+        "retries": 1,
         "error_rate": 0.0,
         "errors_by_type": {},
-        "throughput_rps": 15.565859513823083,
+        "throughput_rps": 1.7041920061449187,
         "latency_ms": {
-          "p50": 1778.886665997561,
-          "p95": 2939.242374995956,
-          "p99": 3283.2261669973377,
-          "mean": 1904.2633551094411,
-          "max": 4440.2028339973185,
+          "p50": 3196.40812498983,
+          "p95": 4307.758583003306,
+          "p99": 6485.7593330089,
+          "mean": 3075.0392649450646,
+          "max": 6714.24487499462,
           "n": 109
         },
         "tokens": {
           "prompt": 126277,
-          "completion": 1716,
-          "total": 127993,
+          "completion": 1718,
+          "total": 127995,
           "mean_prompt": 1158.5045871559632,
-          "mean_completion": 15.743119266055047
+          "mean_completion": 15.761467889908257
         },
         "cost": {
-          "total_usd": 0.008875124,
-          "per_call_usd": 8.142315596330275e-05,
-          "per_correct_usd": 9.646873913043478e-05,
-          "correct": 92
+          "total_usd": 0.00887546,
+          "per_call_usd": 8.14262385321101e-05,
+          "per_correct_usd": 9.861622222222222e-05,
+          "correct": 90
         }
       },
       "parse_strategies": {
