@@ -58,13 +58,43 @@ async def screen_one(
     gate = asyncio.Semaphore(concurrency)
     rows: list[dict] = []
 
+    # Progress is printed as calls land, not just when the model finishes.
+    #
+    # Screening used to print the model name and then nothing until every issue was
+    # done. That reads as a hang the moment calls get slow: raising the output cap
+    # for a thinking model took one model from four minutes to roughly forty, with
+    # no output in between, and the only reasonable conclusion from the outside was
+    # that it had wedged. It also hid the failure type until the very end, which is
+    # the thing you most want to see early.
+    done = 0
+    errs: dict[str, int] = {}
+
     async def one(issue: Issue) -> None:
+        nonlocal done
         async with gate:
             res = await client.classify(issue, model_id)
         row = asdict(res)
         row["gold_label"] = issue.gold_label
         row["templated"] = issue.templated
         rows.append(row)
+
+        done += 1
+        if res.error_type:
+            errs[res.error_type] = errs.get(res.error_type, 0) + 1
+        if done % 10 == 0 or done == len(issues):
+            elapsed = time.perf_counter() - started
+            rate = done / elapsed if elapsed else 0.0
+            eta = (len(issues) - done) / rate if rate else 0.0
+            detail = (
+                "  " + ", ".join(f"{k} {v}" for k, v in sorted(errs.items(), key=lambda kv: -kv[1]))
+                if errs
+                else ""
+            )
+            print(
+                f"    {done}/{len(issues)}  {rate:.1f}/s  "
+                f"elapsed {elapsed:.0f}s  eta {eta:.0f}s{detail}",
+                flush=True,
+            )
 
     started = time.perf_counter()
     try:
@@ -178,11 +208,13 @@ async def main_async() -> int:
     results: list[dict] = []
     wall_start = time.perf_counter()
     for mid in model_ids:
-        print(f"  {mid} ...", end="", flush=True, file=sys.stderr)
+        # Newline, not end="": progress lines now print underneath this header, so
+        # holding the line open left the summary dangling off the last of them.
+        print(f"  {mid} ...", flush=True, file=sys.stderr)
         r = await screen_one(settings, mid, issues, concurrency)
         results.append(r)
         print(
-            f" macro-F1 {r['quality']['macro_f1']:.3f}"
+            f"  -> macro-F1 {r['quality']['macro_f1']:.3f}"
             f"  acc {r['quality']['accuracy']:.1%}"
             f"  p95 {r['operational']['latency_ms']['p95'] or 0:.0f}ms"
             f"  ${r['operational']['cost']['per_call_usd']:.3g}/call"
