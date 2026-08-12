@@ -233,10 +233,48 @@
     <div id="methodCorpus"></div>
   </div>
   <div class="card">
+    <h2>How much a single run is worth</h2>
+    <p class="hint">Less than you would think, and this is the most important thing on this page.
+    A run is not reproducible even at temperature 0, because a hosted endpoint batches work across
+    requests and that changes the arithmetic slightly.</p>
+    <table><tbody>
+      <tr><td>same model, same 109 dev issues, six runs</td>
+          <td class="mono">0.789 · 0.810 · 0.810 · 0.774 · 0.793 · 0.789</td></tr>
+      <tr><td>mean / standard deviation / spread</td><td>0.794 / 0.014 / 0.036</td></tr>
+      <tr><td>one configuration, measured twice</td><td>0.847 and 0.774</td></tr>
+      <tr><td>first place to tenth on the screening table</td><td>0.847 down to 0.777, a spread of 0.070</td></tr>
+    </tbody></table>
+    <p class="hint">So one model's own noise is about half the distance between first and tenth
+    place. Ranking eleven models by a single macro-F1 to three decimals was never valid, and when
+    the two leaders were re-run five times each the order reversed: the model recommended here was
+    third on that first table.</p>
+    <p class="hint">What follows from that. Quality claims come from five runs per model, not one.
+    The recommendation rests on latency and cost, where the differences are two to three times and
+    survive repetition, rather than on a macro-F1 gap that moves between runs. Where only a single
+    run exists, it says so. <code>make screen REPEAT=n</code> runs each model n times and reports
+    the spread, and it keeps the median run rather than the best, because picking the best of n is
+    how a lucky draw becomes a headline.</p>
+  </div>
+  <div class="card">
+    <h2>Why macro-F1 and not accuracy</h2>
+    <p class="hint">Two deliberately useless baselines, scored against the same answer key:</p>
+    <table><thead><tr><th>baseline</th><th>accuracy</th><th>macro-F1</th></tr></thead><tbody>
+      <tr><td>always answer <code>bug</code></td><td>47.8%</td><td>0.108</td></tr>
+      <tr><td>answer <code>bug</code> unless the title looks like a CVE report</td><td>54.9%</td><td>0.280</td></tr>
+    </tbody></table>
+    <p class="hint">Neither contains a model. Accuracy flatters both, because <code>bug</code> is
+    48% of the test split. Macro-F1 weights all six classes equally and catches them. It has the
+    opposite weakness, though, and this run shows it: a class with 3 issues counts as much as one
+    with 121, so a single flipped answer in a small class moves the headline. Both numbers are
+    reported, and small classes are marked <code>thin</code>.</p>
+  </div>
+  <div class="card">
     <h2>Candidate pool</h2>
     <p class="hint">Only DigitalOcean-hosted models, because that's where the exercise credits
     work. Picked to cover a wide range: size, whether the whole model runs per word or only a
-    slice, whether it thinks out loud first, and about 15x in price.</p>
+    slice, whether it thinks out loud first, and about 20x in list price. On this workload, where
+    a call is roughly 1,130 tokens in and 18 out, that works out at 18x between the cheapest and
+    dearest model actually measured.</p>
     <div id="methodCatalog"></div>
   </div>
   <div class="card">

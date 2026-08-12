@@ -67,7 +67,7 @@ rest. So I have no proxy for the frontier tier at all, and I say what follows wi
 
 That is less of a hole than it sounds. The customer's question is whether a cheaper model is good
 enough, and the strongest evidence for "yes" is that the models here are indistinguishable from
-*each other* across a 20x range of size and a 3.5x range of price. When a 14B model matches a
+*each other* across a 20x range of size and an 18x range of price. When a 14B model matches a
 284B model on a task, the task is not what is limiting the result, and buying a larger model is
 unlikely to change it.
 
@@ -547,7 +547,7 @@ database, which is more machinery than an evaluation harness needs.
 the question of whether the customer is overpaying is answered inside the range the credits
 reach. I had intended `qwen3.5-397b-a17b` to represent the top of that range, and it rate-limited
 105 of 109 calls, so I have no stand-in for the expensive tier either. What I can say is that
-across the ten models I *could* measure, spanning 14B to 284B and a 3.5x price range, quality
+across the ten models I *could* measure, spanning 14B to 284B and an 18x range of cost per call, quality
 differences were inside run-to-run noise. That does not prove a frontier model would add nothing.
 It does mean nothing in this field showed a size-related advantage worth paying for.
 
