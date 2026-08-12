@@ -40,7 +40,11 @@ def list_runs(runs_dir: Path) -> list[dict[str, Any]]:
     if not runs_dir.exists():
         return []
     out: list[dict[str, Any]] = []
-    for path in sorted(runs_dir.glob("run-*.json"), reverse=True):
+    # Sorted by filename here only to make the read order stable; the real ordering
+    # is applied at the end. Filenames begin with a random hex run id, so sorting on
+    # them is arbitrary rather than chronological, and it put the older of two runs
+    # at the top of a table whose first column is "finished".
+    for path in sorted(runs_dir.glob("run-*.json")):
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
@@ -63,6 +67,9 @@ def list_runs(runs_dir: Path) -> list[dict[str, Any]]:
                 "wall_clock_s": payload.get("operational", {}).get("wall_clock_s"),
             }
         )
+    # Newest first, on the timestamp inside the file. Falls back to an empty string
+    # so a run missing finished_at sorts last instead of raising.
+    out.sort(key=lambda r: r.get("finished_at") or "", reverse=True)
     return out
 
 

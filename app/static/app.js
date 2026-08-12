@@ -88,12 +88,29 @@ async function boot() {
   wireChips("scoredFilters", (f) => { scoredFilter = f; renderScoredList(); });
   wireChips("unscoredFilters", (f) => { unscoredFilter = f; renderUnscoredList(); });
 
-  // Load the last saved run straight away if there is one, so opening the app shows
-  // results instead of an empty shell.
+  // Show a result on open if one exists anywhere, rather than an empty shell.
+  //
+  // /api/result only knows about runs completed by the current process, so after a
+  // restart it returns "no run has completed in this process yet" even with finished
+  // runs sitting on disk. The page then opened blank while two complete runs were
+  // one click away in the saved-runs list, which reads as an app with no data.
+  // Falling back to the newest file on disk fixes that.
   try {
     const last = await fetch("/api/result", { cache: "no-store" });
-    if (last.ok) { RESULT = await last.json(); renderAll(); }
-  } catch { /* no run in this process yet */ }
+    if (last.ok) {
+      RESULT = await last.json();
+      renderAll();
+    } else {
+      const { runs } = await readJson(await fetch("/api/runs", { cache: "no-store" }));
+      if (runs && runs.length) {
+        // runs[0] is the newest; the server sorts on finished_at.
+        RESULT = await readJson(
+          await fetch("/api/runs/" + encodeURIComponent(runs[0].file), { cache: "no-store" })
+        );
+        renderAll();
+      }
+    }
+  } catch { /* nothing to show yet; the empty state is correct */ }
 
   // Reattach to a run that is already going. Runs live on the server, not in the
   // tab that started them, so a reload or a second browser should join the run in
@@ -370,7 +387,8 @@ function renderScored() {
     <div class="metric ${slot}">
       <div class="k">${slot.toUpperCase()} accuracy</div>
       <div class="v">${pct(s.accuracy)}</div>
-      <div class="n">${int(s.correct)}/${int(s.n_usable)} · ${int(s.n_failed)} failed calls</div>
+      <div class="n">${int(s.correct)}/${int(s.n_usable)} · ${int(s.n_failed)} failed calls
+        · excl. templated ${pct(s.accuracy_excl_templated)} on ${int(s.n_excl_templated)}</div>
     </div>
     <div class="metric ${slot}">
       <div class="k">${slot.toUpperCase()} cost / correct</div>
@@ -558,7 +576,11 @@ function renderOps() {
     <div class="metric"><div class="k">total cost</div><div class="v">${usd(oa.cost.total_usd + ob.cost.total_usd)}</div>
       <div class="n">both models, this run</div></div>
     <div class="metric"><div class="k">temperature</div><div class="v">${c.temperature}</div>
-      <div class="n">deterministic classification</div></div>` +
+      <div class="n">set to 0; the endpoint still varies between runs</div></div>
+    <div class="metric"><div class="k">output cap</div><div class="v">${int(c.max_tokens)} / ${int(c.reasoning_max_tokens)}</div>
+      <div class="n">normal / reasoning models, in tokens</div></div>
+    <div class="metric"><div class="k">timeout</div><div class="v">${c.request_timeout_s}s</div>
+      <div class="n">${int(c.max_retries)} attempts per call</div></div>` +
     (RESULT.simulated
       ? `<div class="metric"><div class="k">time scale</div><div class="v">${c.mock_time_scale}×</div>
          <div class="n">simulated; wall clock is compressed</div></div>` : "");
