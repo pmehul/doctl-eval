@@ -33,6 +33,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import statistics
 import sys
 import time
 from dataclasses import asdict
@@ -262,6 +263,15 @@ async def main_async() -> int:
                     help="gold split to score on. Selection should use dev.")
     ap.add_argument("--concurrency", type=int, default=None)
     ap.add_argument("--models", default=None, help="comma-separated subset of model ids")
+    ap.add_argument(
+        "--repeat", type=int, default=1,
+        help="run each model this many times and report mean and spread. Needed "
+             "because a single run is not reproducible even at temperature 0: six "
+             "runs of one model on the same 109 issues spanned 0.774 to 0.810 "
+             "macro-F1, and one configuration produced 0.847 and 0.774 on separate "
+             "occasions. A single number cannot be compared against another single "
+             "number when the noise is that wide.",
+    )
     args = ap.parse_args()
 
     settings = Settings()
@@ -305,21 +315,55 @@ async def main_async() -> int:
         # Newline, not end="": progress lines now print underneath this header, so
         # holding the line open left the summary dangling off the last of them.
         print(f"  {mid} ...", flush=True, file=sys.stderr)
-        r = await screen_one(settings, mid, issues, concurrency)
-        results.append(r)
-        print(
-            f"  -> macro-F1 {r['quality']['macro_f1']:.3f}"
-            f"  acc {r['quality']['accuracy']:.1%}"
-            f"  p50 {r['operational']['latency_ms']['p50'] or 0:.0f}ms"
-            f"  p95 {r['operational']['latency_ms']['p95'] or 0:.0f}ms"
-            # Throughput is the point of a concurrency sweep and was missing from
-            # this line, which left the sweep unreadable: the knee is where rps
-            # stops climbing while p95 keeps going, and rps was never printed.
-            f"  {r['operational']['throughput_rps']:.2f} rps"
-            f"  ${r['operational']['cost']['per_call_usd']:.3g}/call"
-            f"  err {r['operational']['error_rate']:.1%}",
-            file=sys.stderr,
-        )
+
+        runs: list[dict] = []
+        for attempt in range(1, args.repeat + 1):
+            r = await screen_one(settings, mid, issues, concurrency)
+            runs.append(r)
+            prefix = f"  -> " if args.repeat == 1 else f"  -> run {attempt}/{args.repeat}  "
+            print(
+                prefix
+                + f"macro-F1 {r['quality']['macro_f1']:.3f}"
+                f"  acc {r['quality']['accuracy']:.1%}"
+                f"  p50 {r['operational']['latency_ms']['p50'] or 0:.0f}ms"
+                f"  p95 {r['operational']['latency_ms']['p95'] or 0:.0f}ms"
+                # Throughput is the point of a concurrency sweep and was missing from
+                # this line, which left the sweep unreadable: the knee is where rps
+                # stops climbing while p95 keeps going, and rps was never printed.
+                f"  {r['operational']['throughput_rps']:.2f} rps"
+                f"  ${r['operational']['cost']['per_call_usd']:.3g}/call"
+                f"  err {r['operational']['error_rate']:.1%}",
+                file=sys.stderr,
+            )
+
+        # Keep the median run as the representative one so the table still holds a
+        # single row per model, and attach the spread to it. The median rather than
+        # the best, because picking the best of N is how a lucky draw becomes a
+        # published headline.
+        runs.sort(key=lambda x: x["quality"]["macro_f1"])
+        rep = runs[len(runs) // 2]
+        if args.repeat > 1:
+            f1s = [x["quality"]["macro_f1"] for x in runs]
+            accs = [x["quality"]["accuracy"] for x in runs]
+            rep["repeat"] = {
+                "n": len(runs),
+                "macro_f1_values": f1s,
+                "macro_f1_mean": statistics.mean(f1s),
+                "macro_f1_stdev": statistics.stdev(f1s) if len(f1s) > 1 else 0.0,
+                "macro_f1_min": min(f1s),
+                "macro_f1_max": max(f1s),
+                "accuracy_mean": statistics.mean(accs),
+                "accuracy_stdev": statistics.stdev(accs) if len(accs) > 1 else 0.0,
+            }
+            rp = rep["repeat"]
+            print(
+                f"     across {rp['n']} runs: macro-F1 {rp['macro_f1_mean']:.3f} "
+                f"± {rp['macro_f1_stdev']:.3f}  "
+                f"(min {rp['macro_f1_min']:.3f}, max {rp['macro_f1_max']:.3f}, "
+                f"spread {rp['macro_f1_max'] - rp['macro_f1_min']:.3f})",
+                file=sys.stderr,
+            )
+        results.append(rep)
     wall_total = time.perf_counter() - wall_start
 
     # Sorted on quality first, then on what a correct answer costs. Spelled out here

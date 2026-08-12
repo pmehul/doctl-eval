@@ -9,6 +9,7 @@ PY    ?= .venv/bin/python
 SPLIT       ?= dev
 CONCURRENCY ?=
 MODELS      ?=
+REPEAT      ?=
 
 # Load .env into the environment for any target that talks to the API.
 #
@@ -53,6 +54,7 @@ help:
 	@echo "                       MODELS=a,b      only these model ids"
 	@echo "                       CONCURRENCY=n   requests in flight"
 	@echo "                       SPLIT=dev|test  which half of the answer key"
+	@echo "                       REPEAT=n        run each model n times, report mean +/- spread"
 	@echo "  make serve         Run the app against real Serverless Inference"
 	@echo "  make serve-mock    Run the app against the offline simulator, no key needed"
 	@echo ""
@@ -97,7 +99,8 @@ gold:
 screen:
 	@$(LOADENV) $(OVERRIDE) $(PY) scripts/screen_models.py --split $(SPLIT) \
 	  $(if $(CONCURRENCY),--concurrency $(CONCURRENCY),) \
-	  $(if $(MODELS),--models $(MODELS),)
+	  $(if $(MODELS),--models $(MODELS),) \
+	  $(if $(REPEAT),--repeat $(REPEAT),)
 
 serve:
 	@$(LOADENV) $(OVERRIDE) $(PY) -m uvicorn app.main:app --host 127.0.0.1 --port $(PORT) --reload

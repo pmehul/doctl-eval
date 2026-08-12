@@ -1,0 +1,185 @@
+{
+  "generated_at": "2026-08-12T13:28:28.140856+00:00",
+  "provider": "digitalocean",
+  "simulated": false,
+  "split": "dev",
+  "n_issues": 109,
+  "concurrency": 8,
+  "prompt_version": "v3",
+  "corpus_hash": "18d67e20321158c9",
+  "pricing_source": "https://docs.digitalocean.com/products/inference/details/pricing/",
+  "pricing_verified": "2026-08-07",
+  "wall_clock_s": 41.67849295800261,
+  "results": [
+    {
+      "model_id": "deepseek-4-flash",
+      "label": "DeepSeek V4 Flash",
+      "params": "284B total",
+      "architecture": "moe",
+      "reasoning": false,
+      "usd_per_m_input": 0.068,
+      "usd_per_m_output": 0.168,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 91,
+        "accuracy": 0.8348623853211009,
+        "macro_f1": 0.7736713414462776,
+        "macro_f1_excl_templated": 0.728405609735533,
+        "accuracy_excl_templated": 0.8217821782178217,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 50,
+            "tp": 45,
+            "fp": 5,
+            "fn": 7,
+            "precision": 0.9,
+            "recall": 0.8653846153846154,
+            "f1": 0.8823529411764707
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 35,
+            "tp": 30,
+            "fp": 5,
+            "fn": 4,
+            "precision": 0.8571428571428571,
+            "recall": 0.8823529411764706,
+            "f1": 0.8695652173913043
+          },
+          "question": {
+            "support": 8,
+            "predicted": 5,
+            "tp": 3,
+            "fp": 2,
+            "fn": 5,
+            "precision": 0.6,
+            "recall": 0.375,
+            "f1": 0.4615384615384615
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 9,
+            "tp": 3,
+            "fp": 6,
+            "fn": 2,
+            "precision": 0.3333333333333333,
+            "recall": 0.6,
+            "f1": 0.42857142857142855
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 2,
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 45,
+            "enhancement": 2,
+            "question": 1,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 2,
+            "enhancement": 30,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "question": {
+            "bug": 2,
+            "enhancement": 2,
+            "question": 3,
+            "documentation": 1,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 1,
+            "question": 0,
+            "documentation": 3,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 8,
+        "wall_clock_s": 41.6022741249908,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 2.620049078868092,
+        "latency_ms": {
+          "p50": 2078.5594169865362,
+          "p95": 7412.0398340019165,
+          "p99": 9344.85570799734,
+          "mean": 2918.0849507151206,
+          "max": 9462.916291988222,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 126277,
+          "completion": 1714,
+          "total": 127991,
+          "mean_prompt": 1158.5045871559632,
+          "mean_completion": 15.724770642201834
+        },
+        "cost": {
+          "total_usd": 0.008874788,
+          "per_call_usd": 8.142007339449541e-05,
+          "per_correct_usd": 9.752514285714285e-05,
+          "correct": 91
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false
+    }
+  ]
+}
