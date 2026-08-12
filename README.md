@@ -405,6 +405,8 @@ default.
 | variable | default | what it does |
 |---|---|---|
 | `DO_INFERENCE_API_KEY` | — | **Required.** Your Serverless Inference API key. |
+| `BASIC_AUTH_PASSWORD` | *(empty)* | **Set this before you deploy anywhere.** The login password. Leaving it empty removes the login entirely, which is only safe on localhost. |
+| `BASIC_AUTH_USERNAME` | `reviewer` | The login username. |
 | `PROVIDER` | `digitalocean` | Use `digitalocean` for real calls, or `mock` for the offline simulator. |
 | `DO_INFERENCE_BASE_URL` | `https://inference.do-ai.run/v1` | Any endpoint that is compatible with the OpenAI API. |
 | `CONCURRENCY` | `8` | How many requests run at the same time, shared between both models. It can also be changed for each run in the application, so you never need to rebuild the image to change it. |
