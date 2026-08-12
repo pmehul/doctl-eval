@@ -491,7 +491,7 @@ function renderUnscored() {
     <div class="metric"><div class="k">agreement rate</div><div class="v">${pct(ag.agreement_rate)}</div>
       <div class="n">${int(ag.n_agreed)} of ${int(ag.n_both_succeeded)} both-succeeded</div></div>
     <div class="metric"><div class="k">disagreements</div><div class="v">${int(ag.n_disagreed)}</div>
-      <div class="n">the escalation population</div></div>
+      <div class="n">what a person should review</div></div>
     <div class="metric"><div class="k">unscored issues</div><div class="v">${int(ag.n)}</div>
       <div class="n">no ground truth available</div></div>`;
 

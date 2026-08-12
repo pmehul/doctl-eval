@@ -242,22 +242,37 @@ class ServerlessInferenceClient:
 # Offline simulator
 # --------------------------------------------------------------------------
 
-# Made-up behaviour profiles for the simulator. These are my guesses at how the
-# models rank, not measurements, and nothing in the recommendation rests on them.
-# They exist so the UI has data of a believable shape and the confusion matrices
-# aren't empty while I'm building.
+# Behaviour profiles for the simulator, taken from the measured screening run on the
+# dev split. Skill is that model's macro-F1 and lat_ms is its measured p50.
+#
+# These started as my guesses at the ranking, written before any model had been
+# called, and they were badly wrong in both directions: mistral-3-14B was guessed
+# last of eleven at 0.68 and measured first at 0.816, qwen3.5-397b-a17b was guessed
+# first at 0.87 and cannot complete a run at all, and alibaba-qwen3-32b was guessed
+# at 780ms against a measured p50 of 15,844ms. Left alone, `make serve-mock` showed
+# a leaderboard that contradicted the recommendation in the README, which is a
+# confusing thing to hand a reviewer.
+#
+# Replacing guesses with measurements does not turn simulated output into evidence,
+# and it must not be read that way round. These numbers are derived from the results,
+# so a mock run agreeing with the recommendation is circular by construction and
+# proves nothing. What it buys is a simulator whose shape resembles the real thing,
+# so the UI can be developed offline without teaching anyone a false ranking.
 _MOCK_PROFILES: dict[str, dict[str, float]] = {
-    "openai-gpt-oss-20b": {"skill": 0.72, "lat_ms": 620, "lat_spread": 0.45},
-    "openai-gpt-oss-120b": {"skill": 0.84, "lat_ms": 900, "lat_spread": 0.40},
-    "mistral-3-14B": {"skill": 0.68, "lat_ms": 520, "lat_spread": 0.40},
-    "gemma-4-31B-it": {"skill": 0.75, "lat_ms": 700, "lat_spread": 0.42},
-    "alibaba-qwen3-32b": {"skill": 0.78, "lat_ms": 780, "lat_spread": 0.42},
-    "nvidia-nemotron-3-super-120b": {"skill": 0.80, "lat_ms": 950, "lat_spread": 0.45},
-    "llama3.3-70b-instruct": {"skill": 0.82, "lat_ms": 1150, "lat_spread": 0.48},
-    "llama-4-maverick": {"skill": 0.83, "lat_ms": 1020, "lat_spread": 0.46},
-    "deepseek-4-flash": {"skill": 0.81, "lat_ms": 880, "lat_spread": 0.44},
-    "qwen3.5-397b-a17b": {"skill": 0.87, "lat_ms": 1400, "lat_spread": 0.50},
-    "deepseek-r1-distill-llama-70b": {"skill": 0.85, "lat_ms": 5200, "lat_spread": 0.55},
+    "openai-gpt-oss-20b": {"skill": 0.781, "lat_ms": 2304, "lat_spread": 0.45},
+    "openai-gpt-oss-120b": {"skill": 0.814, "lat_ms": 3101, "lat_spread": 0.40},
+    "mistral-3-14B": {"skill": 0.816, "lat_ms": 1335, "lat_spread": 0.40},
+    "gemma-4-31B-it": {"skill": 0.809, "lat_ms": 1792, "lat_spread": 0.42},
+    "alibaba-qwen3-32b": {"skill": 0.835, "lat_ms": 15844, "lat_spread": 0.42},
+    "nvidia-nemotron-3-super-120b": {"skill": 0.786, "lat_ms": 8220, "lat_spread": 0.45},
+    "llama3.3-70b-instruct": {"skill": 0.804, "lat_ms": 9063, "lat_spread": 0.48},
+    "llama-4-maverick": {"skill": 0.777, "lat_ms": 3340, "lat_spread": 0.46},
+    "deepseek-4-flash": {"skill": 0.775, "lat_ms": 2555, "lat_spread": 0.44},
+    # Never measured. It rate-limited 105 of 109 calls at concurrency 8 and returned
+    # one usable answer, so there is no macro-F1 for it. The field median stands in
+    # here purely to keep the simulator running; it is not a claim about the model.
+    "qwen3.5-397b-a17b": {"skill": 0.800, "lat_ms": 1031, "lat_spread": 0.50},
+    "deepseek-r1-distill-llama-70b": {"skill": 0.812, "lat_ms": 45779, "lat_spread": 0.55},
 }
 
 # When a model is wrong it isn't wrong at random. On this task the real mix-ups

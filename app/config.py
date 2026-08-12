@@ -67,8 +67,19 @@ class Settings:
     # a shared tier. Going higher buys wall-clock time and pays for it in p95, since
     # queue time shows up as latency, and in rate limits. The UI lets you find where
     # that stops being worth it instead of guessing.
-    concurrency: int = field(default_factory=lambda: _int("CONCURRENCY", 8))
-    request_timeout_s: float = field(default_factory=lambda: _float("REQUEST_TIMEOUT_S", 60.0))
+    # 16 is the measured recommendation, not a guess. A sweep from 1 to 128 on the
+    # dev split showed throughput rising almost in step with concurrency all the way
+    # to 16, from 0.35 to 5.80 requests per second, with no p95 degradation and no
+    # rate limiting. No saturation point appeared, so this is not the knee of a
+    # curve; it is the highest level a 109-issue split can measure honestly. Above
+    # it the whole corpus is in flight at once and wall-clock collapses to the
+    # slowest single call, which is a burst rather than sustained throughput.
+    concurrency: int = field(default_factory=lambda: _int("CONCURRENCY", 16))
+    # 120s rather than 60s, because the reviewer can select any pair in the catalog
+    # and two of them need it: deepseek-r1-distill-llama-70b measured a p95 of 115s
+    # and alibaba-qwen3-32b a p95 of 35s. At 60s the slow models fail as timeouts,
+    # which reads as a broken harness rather than a slow model.
+    request_timeout_s: float = field(default_factory=lambda: _float("REQUEST_TIMEOUT_S", 120.0))
     max_retries: int = field(default_factory=lambda: _int("MAX_RETRIES", 3))
     retry_base_delay_s: float = field(default_factory=lambda: _float("RETRY_BASE_DELAY_S", 1.0))
 

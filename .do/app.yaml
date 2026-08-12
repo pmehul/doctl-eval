@@ -105,7 +105,7 @@ services:
       # in the UI, so you do not need to redeploy to experiment.
       - key: CONCURRENCY
         scope: RUN_TIME
-        value: "8"
+        value: "16"
 
       # "test" is the sealed half of the answer key and the one to quote.
       - key: SCORED_SPLIT
@@ -124,7 +124,7 @@ services:
 
       - key: REQUEST_TIMEOUT_S
         scope: RUN_TIME
-        value: "60"
+        value: "120"
 
       # Reasoning models write out their thinking before answering and need the
       # room. Too low and they run out mid-thought, which surfaces as parse_error.

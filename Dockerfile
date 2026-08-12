@@ -42,8 +42,8 @@ USER harness
 #   BASIC_AUTH_USERNAME    login username (default "reviewer")
 #   DO_INFERENCE_API_KEY   needed when PROVIDER=digitalocean. Never baked in.
 #   PROVIDER               digitalocean | mock
-#   CONCURRENCY            requests in the air at once (default 8)
-#   REQUEST_TIMEOUT_S      how long to wait for one reply (default 60)
+#   CONCURRENCY            requests in the air at once (default 16, measured)
+#   REQUEST_TIMEOUT_S      how long to wait for one reply (default 120)
 #   MAX_RETRIES            attempts per call, retryable failures only (default 3)
 #   TEMPERATURE            0 so runs reproduce
 #   MAX_TOKENS             output cap for normal models (default 96)
@@ -53,8 +53,8 @@ USER harness
 #   PORT                   listen port (default 8080)
 ENV PROVIDER=digitalocean \
     BASIC_AUTH_USERNAME=reviewer \
-    CONCURRENCY=8 \
-    REQUEST_TIMEOUT_S=60 \
+    CONCURRENCY=16 \
+    REQUEST_TIMEOUT_S=120 \
     MAX_RETRIES=3 \
     TEMPERATURE=0 \
     SCORED_SPLIT=test \

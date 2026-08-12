@@ -375,7 +375,8 @@ sized from the default setting, which meant that a run at concurrency 64 would h
 by a pool built for concurrency 8. Every latency figure would then have been measuring delays
 inside my own code rather than the provider's response time.
 
-Both problems are now covered by `make verify`, which runs 43 checks.
+Both problems are now covered by `make verify`, which runs just over forty checks. The exact
+count depends on the provider, since one check only applies to the simulator.
 
 A few other decisions are worth stating briefly. Every issue is sent as its own separate
 request, and requests are never combined. Combining them would be cheaper, and the exercise
