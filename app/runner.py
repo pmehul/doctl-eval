@@ -40,6 +40,12 @@ class RunProgress:
         self.total = total
         self.completed = 0
         self.errors = 0
+        # Errors are counted per type, not just totalled. A bare "264 errors" says
+        # something is wrong without saying what, and each type points at a
+        # different fix: rate_limit means lower the concurrency, timeout means
+        # raise the deadline, bad_json means repair the prompt, auth means the key
+        # is wrong. Naming the type live turns a stuck run into a diagnosis.
+        self.errors_by_type: dict[str, int] = {}
         self.started_at = time.time()
         self.state = "running"
         self.message = ""
@@ -54,6 +60,9 @@ class RunProgress:
             "total": self.total,
             "completed": self.completed,
             "errors": self.errors,
+            "errors_by_type": dict(
+                sorted(self.errors_by_type.items(), key=lambda kv: -kv[1])
+            ),
             "elapsed_s": elapsed,
             "throughput_rps": rate,
             "eta_s": (remaining / rate) if rate > 0 and remaining > 0 else 0.0,
@@ -95,6 +104,9 @@ async def execute_run(
             progress.completed += 1
             if res.error_type:
                 progress.errors += 1
+                progress.errors_by_type[res.error_type] = (
+                    progress.errors_by_type.get(res.error_type, 0) + 1
+                )
 
     wall_start = time.perf_counter()
     try:

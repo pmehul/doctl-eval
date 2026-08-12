@@ -94,6 +94,33 @@ async function boot() {
     const last = await fetch("/api/result", { cache: "no-store" });
     if (last.ok) { RESULT = await last.json(); renderAll(); }
   } catch { /* no run in this process yet */ }
+
+  // Reattach to a run that is already going. Runs live on the server, not in the
+  // tab that started them, so a reload or a second browser should join the run in
+  // progress rather than pretend the box is idle.
+  await resumeRunIfActive();
+}
+
+async function resumeRunIfActive() {
+  try {
+    const p = await (await fetch("/api/progress", { cache: "no-store" })).json();
+    if (p.state !== "running") return;
+    $("runBtn").disabled = true;
+    $("progressWrap").hidden = false;
+    $("runNote").textContent = "rejoined a run that was already in progress.";
+    const final = await followProgress();
+    if (final.state === "done") {
+      RESULT = await readJson(await fetch("/api/result", { cache: "no-store" }));
+      $("barFill").style.width = "100%";
+      renderAll();
+      await loadRuns();
+    } else {
+      $("runNote").innerHTML =
+        `<span style="color:var(--bad)">${esc(final.message || "the run failed")}</span>`;
+    }
+  } catch { /* nothing in flight */ } finally {
+    $("runBtn").disabled = false;
+  }
 }
 
 /* Report the mode from the live health response, never from hardcoded text.
@@ -171,40 +198,98 @@ async function startRun() {
     scored_split: $("scoredSplit").value,
   };
 
-  const poll = setInterval(async () => {
-    try {
-      const p = await (await fetch("/api/progress", { cache: "no-store" })).json();
-      if (p.state === "running") {
-        const frac = p.total ? p.completed / p.total : 0;
-        $("barFill").style.width = (frac * 100).toFixed(1) + "%";
-        $("progressText").textContent =
-          `${p.completed} / ${p.total} calls · ${p.errors} errors · ` +
-          `${p.throughput_rps.toFixed(1)} rps · elapsed ${secs(p.elapsed_s)} · eta ${secs(p.eta_s)}`;
-      }
-    } catch { /* transient */ }
-  }, 400);
-
   try {
+    // The POST only starts the run; it does not wait for it. A full run is over a
+    // thousand calls and takes a quarter of an hour, and no proxy will hold a
+    // request open that long. App Platform used to cut the connection and return
+    // an HTML error page, which arrived here as
+    // "Unexpected token '<', "<!DOCTYPE "... is not valid JSON"
+    // even though the run itself was fine. So the server replies 202 straight
+    // away and the real progress is read from /api/progress below.
     const resp = await fetch("/api/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
+      cache: "no-store",
     });
-    const data = await resp.json();
-    if (!resp.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail));
-    RESULT = data;
+    const data = await readJson(resp);
+    if (!resp.ok) {
+      throw new Error(
+        typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail)
+      );
+    }
+
+    // Poll until the run finishes. Progress is the source of truth from here on.
+    const final = await followProgress();
+    if (final.state === "failed") {
+      throw new Error(final.message || "the run failed on the server");
+    }
+
+    RESULT = await readJson(await fetch("/api/result", { cache: "no-store" }));
     $("barFill").style.width = "100%";
     $("progressText").textContent =
       `done · ${RESULT.operational.total_requests} calls in ${secs(RESULT.operational.wall_clock_s)} · ` +
-      `saved as ${esc(RESULT.persisted_to || "(not persisted)")}`;
+      `saved as ${RESULT.persisted_to || "(not persisted)"}`;
     renderAll();
     await loadRuns();
     document.querySelector('.tab[data-tab="scored"]').click();
   } catch (e) {
     $("runNote").innerHTML = `<span style="color:var(--bad)">${esc(e.message)}</span>`;
   } finally {
-    clearInterval(poll);
     btn.disabled = false;
+  }
+}
+
+/* Parse a response as JSON, but explain it when the body is not JSON at all.
+   A proxy timing out or an auth redirect returns an HTML page, and the raw
+   "Unexpected token '<'" that JSON.parse throws tells the reader nothing about
+   what actually went wrong. */
+async function readJson(resp) {
+  const text = await resp.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    const looksHtml = text.trimStart().startsWith("<");
+    throw new Error(
+      looksHtml
+        ? `the server returned an HTML page instead of JSON (HTTP ${resp.status}). ` +
+          `This is usually a proxy timeout or an expired login. The run may still ` +
+          `be going: reload the page to pick it up again.`
+        : `unreadable reply from the server (HTTP ${resp.status}): ${text.slice(0, 200)}`
+    );
+  }
+}
+
+/* Poll /api/progress until the run stops, redrawing the bar as it goes.
+   Resolves with the last progress payload, whether it finished or failed. */
+async function followProgress() {
+  let misses = 0;
+  for (;;) {
+    await new Promise((r) => setTimeout(r, 500));
+    let p;
+    try {
+      p = await readJson(await fetch("/api/progress", { cache: "no-store" }));
+      misses = 0;
+    } catch {
+      // A dropped poll is not a dropped run. Tolerate a short outage, then give up.
+      if (++misses > 20) throw new Error("lost contact with the server while polling");
+      continue;
+    }
+    if (p.state === "done" || p.state === "failed") return p;
+    if (p.state === "idle") continue;
+
+    const frac = p.total ? p.completed / p.total : 0;
+    $("barFill").style.width = (frac * 100).toFixed(1) + "%";
+    // Name the failing error types inline. "264 errors" alone gives the reader
+    // nothing to act on; "264 errors (rate_limit 251, timeout 13)" says to drop
+    // the concurrency.
+    const byType = p.errors_by_type || {};
+    const detail = Object.keys(byType).length
+      ? ` (${Object.entries(byType).map(([k, v]) => `${k} ${v}`).join(", ")})`
+      : "";
+    $("progressText").textContent =
+      `${p.completed} / ${p.total} calls · ${p.errors} errors${detail} · ` +
+      `${p.throughput_rps.toFixed(1)} rps · elapsed ${secs(p.elapsed_s)} · eta ${secs(p.eta_s)}`;
   }
 }
 

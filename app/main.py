@@ -91,6 +91,11 @@ _run_lock = asyncio.Lock()
 _current: RunProgress | None = None
 _last_result: dict[str, Any] | None = None
 
+# Strong references to in-flight background runs. Without this set, asyncio only
+# holds a weak reference to a bare create_task() and the garbage collector is free
+# to cancel a run halfway through.
+_background_tasks: set[asyncio.Task[None]] = set()
+
 
 @app.get("/api/health")
 async def health() -> Any:
@@ -242,29 +247,73 @@ async def post_run(payload: dict[str, Any] = Body(default={})) -> Any:
     corpus = load_corpus()
     total_calls = len(corpus.workload) * 2
 
-    async with _run_lock:
-        _current = RunProgress(run_id=uuid.uuid4().hex[:12], total=total_calls)
-        try:
-            result = await execute_run(
-                settings=settings,
-                model_a=model_a,
-                model_b=model_b,
-                concurrency=concurrency,
-                scored_split=scored_split,
-                progress=_current,
-            )
-        except Exception as exc:  # surfaced to the UI rather than swallowed
-            _current.state = "failed"
-            _current.message = f"{type(exc).__name__}: {exc}"
-            raise HTTPException(status_code=500, detail=_current.message) from exc
+    # Start the run in the background and answer straight away.
+    #
+    # This used to await the whole run inside the request handler, which works on a
+    # laptop and cannot work behind a proxy. A full run is 1072 calls and takes
+    # roughly fifteen minutes; App Platform's router gives up long before that and
+    # replaces the reply with an HTML error page. The browser then tried to parse
+    # that page as JSON and reported
+    # "Unexpected token '<', "<!DOCTYPE "... is not valid JSON",
+    # while the run itself carried on happily in the background. The visible
+    # symptom was a crashed UI on top of a perfectly healthy run.
+    #
+    # No HTTP request should stay open for a quarter of an hour, so the work is
+    # detached and the client polls /api/progress, which it was already doing to
+    # draw the progress bar. When progress reports state "done" the client fetches
+    # /api/result.
+    _current = RunProgress(run_id=uuid.uuid4().hex[:12], total=total_calls)
 
-        _current.state = "done"
-        _last_result = result
-        if settings.persist_runs:
-            path = store.save_run(settings.runs_dir, result)
-            result["persisted_to"] = path.name
+    async def _background() -> None:
+        global _last_result
+        # The lock is taken inside the task rather than around it, so that it is
+        # held for the life of the run instead of only for the moment it takes to
+        # schedule it.
+        async with _run_lock:
+            try:
+                result = await execute_run(
+                    settings=settings,
+                    model_a=model_a,
+                    model_b=model_b,
+                    concurrency=concurrency,
+                    scored_split=scored_split,
+                    progress=_current,
+                )
+            except Exception as exc:
+                # Nobody is waiting on this call any more, so an exception here
+                # would otherwise vanish into the event loop. Record it on the
+                # progress object, which is the only thing the client still reads.
+                _current.state = "failed"
+                _current.message = f"{type(exc).__name__}: {exc}"
+                return
 
-    return result
+            if settings.persist_runs:
+                try:
+                    path = store.save_run(settings.runs_dir, result)
+                    result["persisted_to"] = path.name
+                except OSError as exc:
+                    # A read-only or full disk should not throw away a finished
+                    # run. Report it and keep the result in memory.
+                    result["persisted_to"] = None
+                    result["persist_error"] = str(exc)
+            _last_result = result
+            _current.state = "done"
+
+    _run_task = asyncio.create_task(_background())
+    # Hold a reference so the task cannot be garbage-collected mid-run.
+    _background_tasks.add(_run_task)
+    _run_task.add_done_callback(_background_tasks.discard)
+
+    return JSONResponse(
+        {
+            "started": True,
+            "run_id": _current.run_id,
+            "total_calls": total_calls,
+            "poll": "/api/progress",
+            "result": "/api/result",
+        },
+        status_code=202,
+    )
 
 
 # --- static UI ------------------------------------------------------------
