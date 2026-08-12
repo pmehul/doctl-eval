@@ -415,11 +415,18 @@ default.
 
 All thirteen settings are documented with their defaults in [`.env.example`](.env.example).
 
-One point I should flag, because it is a deliberate decision rather than an oversight: the
-application has no login, and `POST /api/run` spends real money using the key held in the
-container's environment. That is acceptable when the application runs on localhost or behind a
-proxy that handles authentication. On a public address it would need a login in front of it and
-a limit on spending.
+**A note on the login.** The application sits behind HTTP Basic auth whenever
+`BASIC_AUTH_PASSWORD` is set. The reason is money rather than privacy: `POST /api/run` spends
+real credits using the key in the container's environment, a full run costs roughly $0.27, and
+there is no rate limit. An unprotected public URL could therefore drain the credit balance in
+an afternoon. If you leave the password empty every route is open, which is convenient on a
+laptop and unsafe anywhere else, so set it before you deploy. `/api/health` stays open either
+way so that a platform health check can reach it without credentials.
+
+I should be clear about what this is not. Basic auth gives one shared username and password. It
+provides no user accounts, no per-caller spending limit, and no record of who ran what. For a
+single-user evaluation tool served over HTTPS that is the right amount of security. For
+anything with several users it would not be.
 
 ## The data files
 

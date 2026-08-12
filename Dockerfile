@@ -37,6 +37,9 @@ USER harness
 # the answer key to score can change without rebuilding. The exercise asks for that,
 # and it's why CONCURRENCY isn't a build arg.
 #
+#   BASIC_AUTH_PASSWORD    login password. Empty means no login, which is only
+#                          safe on localhost. Always set it on a public URL.
+#   BASIC_AUTH_USERNAME    login username (default "reviewer")
 #   DO_INFERENCE_API_KEY   needed when PROVIDER=digitalocean. Never baked in.
 #   PROVIDER               digitalocean | mock
 #   CONCURRENCY            requests in the air at once (default 8)
@@ -49,6 +52,7 @@ USER harness
 #   MAX_ISSUES             0 = all 536; above 0 takes an even spread
 #   PORT                   listen port (default 8080)
 ENV PROVIDER=digitalocean \
+    BASIC_AUTH_USERNAME=reviewer \
     CONCURRENCY=8 \
     REQUEST_TIMEOUT_S=60 \
     MAX_RETRIES=3 \

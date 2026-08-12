@@ -6,22 +6,32 @@ yourself, not a spreadsheet pasted into a template.
 One run at a time, held by a lock. Two at once would share the same concurrency
 limit and both would report latency neither of them actually saw.
 
-On security, and this is a deployment choice rather than something I forgot: these
-endpoints have no login. That's fine for a single-user tool on localhost or behind
-an authenticating proxy. It is not fine on a public address, because POST /api/run
-spends real money using the key in the container's environment. Exposed publicly it
-would need a login in front of it and a spend cap per caller.
+Everything is behind HTTP Basic auth when BASIC_AUTH_PASSWORD is set. The reason is
+money rather than privacy: POST /api/run spends real credits using the key in the
+container's environment, and a full run costs roughly $0.27, or about $1.93 if the
+caller picks a reasoning model for both slots. With no login and no rate limit, a
+public URL could drain the whole credit balance in an afternoon. So the password is
+required whenever the app is reachable from outside localhost.
+
+It is deliberately Basic auth and nothing cleverer. There is one user, the browser
+handles the prompt natively, and it costs no extra dependency. It is not a real
+authorisation system: there are no accounts, no per-caller spend caps, and no audit
+of who ran what. For a single-user evaluation tool behind TLS that is the right
+amount of security. For anything multi-tenant it would not be.
 """
 
 from __future__ import annotations
 
 import asyncio
+import os
+import secrets
 import uuid
 from pathlib import Path
 from typing import Any
 
-from fastapi import Body, FastAPI, HTTPException
+from fastapi import Body, Depends, FastAPI, HTTPException, status
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 
 from . import catalog, store
@@ -33,6 +43,47 @@ from .runner import RunProgress, execute_run
 STATIC_DIR = Path(__file__).parent / "static"
 
 app = FastAPI(title="doctl issue-classification eval harness", version="1.0.0")
+
+# --- authentication -------------------------------------------------------
+
+BASIC_AUTH_USERNAME = os.environ.get("BASIC_AUTH_USERNAME", "reviewer")
+BASIC_AUTH_PASSWORD = os.environ.get("BASIC_AUTH_PASSWORD", "")
+
+_basic = HTTPBasic(auto_error=False)
+
+
+def require_auth(credentials: HTTPBasicCredentials | None = Depends(_basic)) -> None:
+    """Gate every route on HTTP Basic auth.
+
+    If BASIC_AUTH_PASSWORD is empty the gate is open, which keeps `make serve-mock`
+    and the test suite frictionless on a laptop. Anywhere the app is actually
+    reachable, set the variable. /api/health stays open regardless so a platform
+    health check can reach it without credentials.
+
+    Both the username and the password are compared with `secrets.compare_digest`,
+    which takes the same time whether the first character is wrong or the last. A
+    plain `==` returns faster on an early mismatch, and that timing difference can be
+    measured over enough requests to recover the password one character at a time.
+    """
+    if not BASIC_AUTH_PASSWORD:
+        return
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="authentication required",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    user_ok = secrets.compare_digest(credentials.username, BASIC_AUTH_USERNAME)
+    pass_ok = secrets.compare_digest(credentials.password, BASIC_AUTH_PASSWORD)
+    # Both comparisons always run, so the reply takes the same time whether the
+    # username was wrong, the password was wrong, or both.
+    if not (user_ok and pass_ok):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="invalid credentials",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
 
 _run_lock = asyncio.Lock()
 _current: RunProgress | None = None
@@ -65,12 +116,12 @@ async def health() -> dict[str, Any]:
     }
 
 
-@app.get("/api/catalog")
+@app.get("/api/catalog", dependencies=[Depends(require_auth)])
 async def get_catalog() -> dict[str, Any]:
     return catalog.catalog_payload()
 
 
-@app.get("/api/corpus")
+@app.get("/api/corpus", dependencies=[Depends(require_auth)])
 async def get_corpus() -> dict[str, Any]:
     corpus = load_corpus()
     return {
@@ -87,7 +138,7 @@ async def get_corpus() -> dict[str, Any]:
     }
 
 
-@app.get("/api/prompt")
+@app.get("/api/prompt", dependencies=[Depends(require_auth)])
 async def get_prompt() -> dict[str, Any]:
     """Expose the exact prompt. The prompt is the experiment's main confound, so
     it should be readable without cloning the repo."""
@@ -102,12 +153,12 @@ async def get_prompt() -> dict[str, Any]:
     }
 
 
-@app.get("/api/runs")
+@app.get("/api/runs", dependencies=[Depends(require_auth)])
 async def get_runs() -> dict[str, Any]:
     return {"runs": store.list_runs(settings.runs_dir)}
 
 
-@app.get("/api/runs/{filename}")
+@app.get("/api/runs/{filename}", dependencies=[Depends(require_auth)])
 async def get_run(filename: str) -> Any:
     try:
         return store.load_run(settings.runs_dir, filename)
@@ -117,21 +168,21 @@ async def get_run(filename: str) -> Any:
         raise HTTPException(status_code=400, detail=str(exc)) from None
 
 
-@app.get("/api/progress")
+@app.get("/api/progress", dependencies=[Depends(require_auth)])
 async def get_progress() -> dict[str, Any]:
     if _current is None:
         return {"state": "idle"}
     return _current.payload()
 
 
-@app.get("/api/result")
+@app.get("/api/result", dependencies=[Depends(require_auth)])
 async def get_result() -> Any:
     if _last_result is None:
         raise HTTPException(status_code=404, detail="no run has completed in this process yet")
     return _last_result
 
 
-@app.post("/api/run")
+@app.post("/api/run", dependencies=[Depends(require_auth)])
 async def post_run(payload: dict[str, Any] = Body(default={})) -> Any:
     global _current, _last_result
 
@@ -196,7 +247,7 @@ if STATIC_DIR.is_dir():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
-@app.get("/")
+@app.get("/", dependencies=[Depends(require_auth)])
 async def index() -> Any:
     idx = STATIC_DIR / "index.html"
     if not idx.is_file():
