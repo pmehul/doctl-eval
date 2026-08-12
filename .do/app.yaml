@@ -1,0 +1,120 @@
+# App Platform spec for this evaluation harness.
+#
+# You can paste this into the "Edit App Spec" box in the control panel, or apply it
+# with: doctl apps create --spec .do/app.yaml
+#
+# Two settings here are load-bearing and worth not changing casually.
+#
+# instance_count is 1 on purpose. The harness allows one run at a time using an
+# in-process lock, and it keeps the last result in a module-level variable. With two
+# instances behind the load balancer the lock stops working, two runs could overlap
+# and each would report a latency profile neither of them actually experienced, and
+# /api/result would return different things depending on which instance answered.
+# Do not add autoscaling to this component.
+#
+# health_check points at /api/health because that is the one route with no login on
+# it. Every other route requires the Basic auth password, so pointing the health
+# check anywhere else would make the platform think the app is permanently down.
+
+name: doctl-eval
+region: nyc
+
+services:
+  - name: web
+
+    github:
+      repo: pmehul/doctl-eval
+      branch: main
+      deploy_on_push: true
+
+    # Build from the Dockerfile rather than letting App Platform guess a Python
+    # buildpack. The image bakes in the issue corpus and the answer key, so a
+    # container needs no GitHub access and no GitHub token at run time.
+    dockerfile_path: Dockerfile
+
+    # See the note at the top. Leave this at 1.
+    instance_count: 1
+
+    # The smallest shared-CPU size. One completed run holds about 0.9 MB in memory
+    # and the work is almost entirely waiting on the network, so 512 MB is ample.
+    # Move up a size only if you raise CONCURRENCY a long way.
+    instance_size_slug: apps-s-1vcpu-0.5gb
+
+    # Matches EXPOSE and the PORT default in the Dockerfile. App Platform also
+    # injects PORT itself, and the container's start command reads it.
+    http_port: 8080
+
+    health_check:
+      http_path: /api/health
+      # The container installs dependencies and loads the 536-issue corpus at
+      # startup, so give it a moment before the first probe.
+      initial_delay_seconds: 20
+      period_seconds: 30
+      timeout_seconds: 5
+      failure_threshold: 3
+
+    envs:
+      # ---- secrets: set these to real values before deploying -----------------
+      # Both are marked SECRET so App Platform encrypts them and they do not
+      # appear in the spec once saved.
+
+      # Your Serverless Inference API key.
+      - key: DO_INFERENCE_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_YOUR_SI_API_KEY
+
+      # The login password. If you leave this empty the whole app is public, and
+      # POST /api/run spends real credits with no rate limit, so a stranger who
+      # finds the URL could drain the balance. Always set it here.
+      - key: BASIC_AUTH_PASSWORD
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_A_PASSWORD
+
+      # ---- plain settings ----------------------------------------------------
+      - key: BASIC_AUTH_USERNAME
+        scope: RUN_TIME
+        value: reviewer
+
+      # "digitalocean" makes real inference calls. Switch to "mock" to run the
+      # offline simulator, which needs no key and spends nothing.
+      - key: PROVIDER
+        scope: RUN_TIME
+        value: digitalocean
+
+      # Requests in flight at once. Raising this trades p95 latency and
+      # rate-limit risk for a shorter wall clock. It can also be changed per run
+      # in the UI, so you do not need to redeploy to experiment.
+      - key: CONCURRENCY
+        scope: RUN_TIME
+        value: "8"
+
+      # "test" is the sealed half of the answer key and the one to quote.
+      - key: SCORED_SPLIT
+        scope: RUN_TIME
+        value: "test"
+
+      # 0 classifies all 536 issues. Set it to something like 40 for a cheap
+      # smoke test after deploying, before committing to a full run.
+      - key: MAX_ISSUES
+        scope: RUN_TIME
+        value: "0"
+
+      - key: TEMPERATURE
+        scope: RUN_TIME
+        value: "0"
+
+      - key: REQUEST_TIMEOUT_S
+        scope: RUN_TIME
+        value: "60"
+
+      # Reasoning models write out their thinking before answering and need the
+      # room. Too low and they run out mid-thought, which surfaces as parse_error.
+      - key: REASONING_MAX_TOKENS
+        scope: RUN_TIME
+        value: "1400"
+
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
