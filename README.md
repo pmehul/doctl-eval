@@ -1,0 +1,462 @@
+# Should this customer pay for a frontier model to sort their issues?
+
+**Running app: `‹DEPLOY-AND-PASTE-URL›`**
+
+My answer is no, and this document explains why.
+
+The customer automatically sorts incoming GitHub issues into categories. They do this at high
+volume, across many repositories, and every issue is sent to an expensive frontier model. They
+suspect they are wasting money, and I think they are correct.
+
+I used the doctl repository as a test bed. It gave me 536 real issues, which I sorted into six
+categories, running every issue through two different models so that the two could be compared
+fairly. doctl itself is not important here. It is simply a convenient source of real data. The
+method does not depend on doctl, on these six categories, or on DigitalOcean, and that
+portability matters because the customer will want to apply the same method to their other
+repositories next.
+
+**My recommendation is to send every issue to gpt-oss-120b, and to send only the difficult
+issues on to qwen3.5-397b-a17b for a second opinion.** Both models are hosted by
+DigitalOcean, so the customer keeps one provider and one API key. I explain the reasoning
+below.
+
+One point before anything else: the application in this repository *is* the test. Every number
+shown in the application is produced by the code here. I did not calculate results separately
+and paste them in.
+
+## Please read this before you read any numbers
+
+Any figure marked `‹PENDING›` requires a Serverless Inference API key, and I did not have one
+while I was building this. The only mode I have run from start to finish is the built-in
+simulator, which invents the model replies so that I could test the harness without a key.
+
+**The simulator's numbers are worthless, and I am not going to present them as if they were
+real.** The simulator contains my own guesses about which models perform better, so if its
+results agree with my recommendation, that agreement proves nothing, because I wrote both the
+guesses and the recommendation. I have made the simulated mode hard to mistake for a real one.
+The application displays a warning banner while the simulator is active, saved result files are
+named `-sim-` instead of `-live-`, and the generated comparison tables carry the header
+"SIMULATED, not evidence".
+
+A good deal of this work is finished and does not depend on that missing run. The dataset is
+final. The correct answers are written, along with the reasoning behind each one. The shortlist
+of models is decided, and I can explain why each model is on it. Every price is recorded, and
+the cost formula is complete. Those are the parts of this exercise I would defend most firmly
+in any case.
+
+## The models I tested
+
+I tested eleven models.
+
+The exercise credits only work on models that DigitalOcean hosts itself, so every model here is
+open-weight. That means I have no direct comparison against a frontier model, and I am not
+claiming one. Instead, `qwen3.5-397b-a17b` acts as a substitute for whatever expensive model the
+customer is paying for today.
+
+I was not trying to test every available model. I was trying to cover a wide range, so that
+whichever model won, I would understand the reason it won. The eleven therefore span three
+things. They range from 14 billion parameters up to 397 billion. Some of them run their entire
+network for every word they produce, while others run only a small part of it. And their input
+prices differ by roughly fifteen times between the cheapest and the most expensive.
+
+The table below needs one word of explanation first. Several of these models are built so that
+only part of the network runs for each word, which is how a very large model can still be
+inexpensive. Where that is the case, I give both the total size and the part that actually runs,
+because the part that runs is what determines how much thinking the model does.
+
+| model | size | how much runs per word | $/M in | $/M out | why I included it |
+|---|---|---|---|---|---|
+| `openai-gpt-oss-20b` | ~21B total, ~3.6B active | part of it | 0.05 | 0.45 | It is the cheapest model available. If it can do this job, then no larger model is worth paying for. |
+| `openai-gpt-oss-120b` | ~117B total, ~5.1B active | part of it | 0.10 | 0.70 | It should give the quality of a 120B model at close to the price of a 20B one. I expected it to win. |
+| `mistral-3-14B` | 14B | all of it | 0.20 | 0.20 | It tests whether a small model that runs completely beats a larger one that runs only partly, at a similar price. |
+| `gemma-4-31B-it` | 31B | all of it | 0.18 | 0.50 | It was trained by a different company on different data, so it should make different mistakes from the others. |
+| `alibaba-qwen3-32b` | 32.8B | all of it | 0.25 | 0.55 | It is the mid-sized model people usually choose by default, so it is the sensible standard that others must beat. |
+| `nvidia-nemotron-3-super-120b` | 120B | all of it | 0.165 | 0.358 | It is a 120B model priced below the 32B models. If its quality holds up, it beats them on price outright. |
+| `llama3.3-70b-instruct` | 70B | all of it | 0.65 | 0.65 | Customers ask about this model by name, so I wanted a measured answer ready when they do. |
+| `llama-4-maverick` | 400B total, 17B active | part of it | 0.20 | 0.696 | It tests whether a much larger total size helps at all when the text being sorted is this short. |
+| `deepseek-4-flash` | 284B | part of it | 0.068 | 0.168 | It is the cheapest model here to run and still a very large one, so it could beat my expected winner on cost. |
+| `qwen3.5-397b-a17b` | 397B total, 17B active | part of it | 0.302 | 1.925 | It is the strongest model available to me, so it sets the quality ceiling and stands in for the customer's current model. |
+| `deepseek-r1-distill-llama-70b` | 70B | all of it, and writes out its reasoning | 0.99 | 0.99 | It tests whether writing out reasoning first is worth its cost on a six-way choice. |
+
+The prices come from
+[DigitalOcean's pricing page](https://docs.digitalocean.com/products/inference/details/pricing/)
+and I checked them on 7 Aug 2026. They are written down in one file,
+[`app/catalog.py`](app/catalog.py), and copied onto every saved result. If DigitalOcean changes
+a price later, that change therefore cannot quietly alter a conclusion I reached earlier.
+
+**Models I chose not to include.** I left out `qwen3-coder-flash` because it is built for
+reading code and this task is reading English prose. I left out the Kimi, GLM and
+Nemotron-Ultra models because they cost between $0.75 and $2.85 per million input tokens, which
+is roughly ten times my main recommendation, for work the cheaper models can probably do. I
+left out the image, audio and video models because they do not perform this kind of task at all.
+And I could not include Claude or GPT-5.x, because the exercise credits do not cover them.
+
+**Why I included the model that writes out its reasoning.** I included
+`deepseek-r1-distill-llama-70b` so that I could rule it out with evidence, rather than leaving
+it off the list because I assumed it would lose. The claim that reasoning models are
+unnecessary for classification is only an opinion until someone puts a price on it.
+
+So here is the price. That model writes roughly 700 tokens of reasoning before it gives an
+answer, where the other models write about 22 tokens in total. At its published rate, those
+extra tokens cost roughly **45 times as much as the other models spend on output**, and all of
+that expense buys one word chosen from a list of six. It also does its reasoning while the
+caller waits, so a request that takes a fraction of a second with other models takes several
+whole seconds with this one. That difference matters because it changes the design from
+answering immediately to placing requests in a queue. If this model turns out to win by a large
+margin I will change my recommendation, but only as far as using it on the difficult issues.
+
+## What I recommend
+
+**Send every issue to gpt-oss-120b. Send only the difficult issues on to qwen3.5-397b-a17b.**
+
+Most issues are straightforward, so the cheap model should handle them. When the cheap model is
+not confident, or when a wrong answer would be expensive, such as a security report, that
+single issue is passed to the larger model for a second opinion.
+
+The structure of this arrangement matters more than the two particular models I have named. The
+expensive model acts as a safety net and never as the default. Sending every issue to a frontier
+model is precisely the mistake the customer is making now, so any recommendation that keeps
+doing so has failed to answer their question. The arrangement is affordable only because the
+expensive model never sees more than the small number of difficult issues.
+
+|  | main model | second opinion |
+|---|---|---|
+| model | `openai-gpt-oss-120b` | `qwen3.5-397b-a17b` |
+| size | ~117B total, ~5.1B active | 397B total, ~17B active |
+| built by | OpenAI (open weight) | Alibaba |
+| $ per million tokens, in / out | 0.10 / 0.70 | 0.302 / 1.925 |
+| accuracy score (macro-F1) | `‹PENDING›` | `‹PENDING›` |
+| speed (p95 latency) | `‹PENDING›` | `‹PENDING›` |
+| cost per correct answer | `‹PENDING›` | `‹PENDING›` |
+
+**Why these two models are not simply two sizes of the same thing.** Both models run only part
+of their network for each word, which is how models of this size stay inexpensive. The part
+that runs is what determines their capability, and there the two differ considerably:
+gpt-oss-120b runs about 5.1 billion parameters per word, while qwen3.5-397b runs about 17
+billion. The second model therefore does roughly 3.3 times as much work per word as the first,
+which is a genuine difference in capability and not a minor revision.
+
+**Why I chose two models from different companies.** This is the decision the rest of the
+design depends on, so it is worth being explicit about. My plan escalates an issue to the
+second model whenever the two models disagree with each other. Two models from the same family
+tend to make the same mistakes, which means they would agree with each other even when both
+were wrong, and their agreement would then tell me nothing useful. Two models from different
+companies, trained on different data, are more likely to fail on different issues, and that
+independence is what makes their disagreement a usable signal. Choosing two companies also
+means that an outage or a retirement at one company cannot disable both models at once.
+
+## The trade-offs I am making
+
+**I am trading quality against cost.** The second model costs about three times as much as the
+first for input and about 2.75 times as much for output. Paying that premium on every issue
+would be indefensible. Paying it only on the issues where the two models disagree is cheap: if
+they disagree on 20% of issues, then the blended cost is `0.8 × main + 0.2 × (main + second)`.
+This is the reason the expensive model only needs to have a bounded price rather than a low one.
+
+**I am trading simplicity against coverage.** Running two models is more work to operate than
+running one, and I would abandon the second model immediately if the evidence did not support
+keeping it. So I have written down in advance the result that would make me abandon it: **if the
+two models score within about 0.03 of each other, then the second opinion is not earning its
+cost.** In that case I would run gpt-oss-120b alone and send the low-confidence issues to a
+person instead, which is both cheaper and simpler to operate.
+
+**I am trading cost against quality at the margin.** There is a second result I have committed
+to in advance. **If `deepseek-4-flash` scores within about 0.02 of gpt-oss-120b, then it should
+replace gpt-oss-120b as the main model purely on price.** It costs $0.068 per million input
+tokens and $0.168 per million output tokens, which is 68% of gpt-oss-120b's input price and 24%
+of its output price. On this workload, where a typical request uses about 1,120 input tokens and
+22 output tokens, that works out at roughly 40% less per call.
+
+**I am trading speed against volume.** Concurrency is the setting that controls this, and it
+means the number of requests being processed at the same time. It is a real trade-off rather
+than a number to maximise. The pattern is reliable even though I cannot yet give the exact
+figures, which are `‹PENDING›`: as concurrency rises, the number of requests completed per
+second stops improving while the time each individual request takes keeps getting worse, and
+rate-limit errors begin to appear. Beyond that point you are giving up reliability in exchange
+for time you no longer save. For an overnight bulk job you should push past that point and
+accept the slower individual requests. For live triage where you have promised someone a
+response time, you should stay below it. This is also why the application always displays the
+p50 and p95 latency figures next to the concurrency at which they were measured, because a
+latency figure on its own, without knowing how hard the system was being pushed, cannot be acted
+on.
+
+**I am trading the value of reasoning against the cost of reasoning.** I covered the figures
+above: roughly 45 times the output cost, and a p95 latency measured in whole seconds, to choose
+one word from a list of six. It is very unlikely to be worth paying for, and that is a finding
+rather than an assumption, because the model is in the test and will be measured.
+
+**Finally, I made trade-offs in the test itself.** Only one person wrote the answer key, and
+that person was me. I never checked whether the models' confidence scores actually mean
+anything. There is no frontier model to compare against. Each of these is a genuine limitation,
+each was a conscious decision about where to spend limited time, and I list all three at the end
+of this document.
+
+## What the test showed
+
+`‹PENDING — to be filled in from data/screening/screening-live-dev-*.md and the final run›`
+
+Running `make screen` regenerates the comparison table. When I have real numbers, these are the
+four things I will be looking for, and why each one matters.
+
+**Where the line between price and quality bends.** The useful answer is not the best model. It
+is the cheapest model that performs as well as the best one, because that is what the customer's
+question about overpaying actually comes down to.
+
+**Whether the small categories hold up.** I expect documentation and enhancement to be the
+categories most often confused with each other, because a request such as "add this to the help
+text" is a documentation change written in the style of a feature request. I expect question and
+enhancement to be the next most confused pair, because "does it support X?" and "please add X"
+are the same sentence with different intentions behind them. The prompt contains rules for both
+of these cases, and the application highlights any square in the results grid that accounts for
+15% or more of a category, so that a problem of this kind gets named rather than guessed at.
+
+**Whether writing out reasoning is worth the cost.** I expect a clear answer of no.
+
+**Whether any model cannot follow the required output format.** A model that fails in this way
+shows up as a count of `parse_error` results rather than as unexplained low accuracy, because I
+record format failures separately from wrong answers.
+
+### What I already know without that run
+
+The findings below came out of building the test rather than running it, and two of them changed
+how the test works.
+
+**Accuracy on its own would have misled me, and I can demonstrate that.** I ran two deliberately
+useless "models" against the real answer key. The first always answers `bug`, and it scored
+**47.8% accuracy**. The second is twenty lines of text matching that answers `bug` unless the
+issue title looks like a CVE report, and it scored **54.9% accuracy**. Both are useless, and the
+second is better than chance while containing no model at all.
+
+The macro-F1 score catches both of them, scoring them 0.108 and 0.280 respectively. It works by
+scoring each of the six categories separately and then averaging those six scores equally, so a
+model that falls back to the largest category whenever it is unsure is penalised for ignoring
+the other five. My answer key contains 173 bugs and only 5 issues in the "other" category, so
+this is a real weakness rather than a theoretical one. **That is why macro-F1 is my headline
+number and accuracy is only a secondary figure.**
+
+**Every issue in the security category was written by a bot.** All 26 issues labelled `security
+vulnerability` are automated dependency-scanner reports, and they all take the same form:
+`CVE-2020-9283 (High) detected in golang.org/x/crypto/ssh-…`. A simple text pattern identifies
+them. This means that a model's score on the security category measures pattern matching rather
+than any judgement about security, and every model will score close to full marks on one of the
+six categories. I therefore flag these issues and report my headline score both with and without
+them included. The text-matching model I described above falls from 0.280 to **0.136** once
+these issues are removed, which is the clearest demonstration I have of how much they flatter
+every model's score. In production I would filter them out with a text pattern and never pay a
+model to look at them.
+
+**No model can score near 100% on this task, and I can estimate roughly where the real ceiling
+sits.** While building the answer key I set aside 15 issues as genuinely ambiguous, out of
+roughly 100 that I examined closely. As an example, doctl issue #205 reports that the
+`--volumes` option requires a UUID while every other option accepts names. That could
+reasonably be called a bug, and it could reasonably be called a missing feature. Forcing it into
+one category would not add information. It would add noise, which would then penalise whichever
+model happened to read the issue the other way.
+
+That refusal rate of roughly 15% implies that two careful people would disagree with each other
+somewhere in the low teens as a percentage. It follows that **any model scoring in the low 90s
+has reached the limit of what my data can measure, and a difference of one or two points between
+two models means nothing at all.** This is the most useful thing to come out of the answer-key
+work, and I would have lost it entirely if I had forced those 15 issues into categories.
+
+**Using the maintainers' own labels alone would have broken the test quietly.** Those labels
+were applied by different people over roughly ten years. The labels `suggestion` and
+`enhancement` both exist and mean the same thing. The label `docs` was used **five times in the
+repository's entire history**. An answer key built only from these labels would contain about
+five documentation examples and no "other" examples at all, which would leave me unable to
+measure whether a model can identify either category. The result would be a six-category test
+that was really testing two categories.
+
+For that reason the 362 answers come from two sources. **I translated 304 of them from the
+maintainers' labels** using an explicit lookup table, and **I wrote 58 of them myself**,
+deliberately looking for the categories that the maintainers' labels cannot supply. Every label
+I wrote has a written reason recorded beside it.
+
+**One category cannot honestly be measured.** The "other" category has only 3 issues in the
+final scoring set, so a single issue moves its score by about 0.1. The application marks any
+category with fewer than 10 examples as "thin". I would rather state plainly that a category
+cannot be measured than invent examples to make the number look respectable.
+
+### How I kept myself honest
+
+I divided the 362 answers into two groups before I began testing anything. I kept 109 for
+tuning and sealed 253 away for the final score, keeping the mix of categories similar in both
+groups and using a fixed random seed so that the division can be reproduced.
+
+**I wrote the prompt using only the tuning group. I chose the models using only the tuning
+group. I looked at the sealed group once, at the end.** Had I screened all eleven models against
+the sealed group and then reported the winner's score, that score would have been the best of
+eleven noisy attempts, which would read considerably better than the truth.
+
+| | bug | enhancement | question | security | documentation | other |
+|---|---|---|---|---|---|---|
+| tuning group | 52 | 34 | 8 | 8 | 5 | 2 |
+| final scoring group | 121 | 78 | 20 | 18 | 13 | 3 |
+
+Two bugs I found are worth admitting here, because each one would have given me wrong numbers
+without producing any error message.
+
+The prompt shows each model four worked examples, which are loaded by issue number, and the code
+now checks that every one of them comes from the tuning group. In my first version those four
+examples were typed in by hand, and **three of the four turned out to come from the sealed
+group**. Had I not caught that, I would have been reporting the models' memory of examples they
+had already seen as though it were accuracy.
+
+The second bug concerned the pool of HTTP connections the application keeps open. That pool is
+now sized according to the concurrency the current run is actually using. Previously it was
+sized from the default setting, which meant that a run at concurrency 64 would have been limited
+by a pool built for concurrency 8. Every latency figure would then have been measuring delays
+inside my own code rather than the provider's response time.
+
+Both problems are now covered by `make verify`, which runs 43 checks.
+
+A few other decisions are worth stating briefly. Every issue is sent as its own separate
+request, and requests are never combined. Combining them would be cheaper, and the exercise
+rules it out for four reasons I would have arrived at independently. You lose the timing for each
+individual issue. You cannot retry one failed issue without repeating the whole group. One badly
+formed reply can corrupt the issues grouped with it. And you cannot send a single difficult issue
+to a stronger model, which is the mechanism my entire recommendation relies on. I also set
+the temperature to 0 so that runs can be repeated exactly, and I use the same prompt for every
+model, because varying the prompt would turn this into a comparison of prompts instead of models.
+
+## How I would roll this out
+
+This exercise proves something about a single repository. The customer's question concerns many
+repositories, and I should say plainly that choosing the model is the easy part of that problem.
+
+**Begin with a month of shadow mode.** Run the new model alongside whatever the customer uses
+now. Record both sets of answers. Apply neither of them. Ship nothing to users.
+
+Before going further I would want the level of agreement measured **for each product
+separately**, not averaged across all of them. If the new model agrees with the current system
+on 88% of doctl issues but only 61% of issues from a database product, then the categories mean
+something different in that second product, and no amount of changing models will fix that. This
+stage is not optional, and the reason is worth spelling out. doctl is a command-line tool, so
+its issues are short, technical, written in English, and mostly written by developers. A managed
+database product receives longer reports written by operations staff, containing more log output
+and more English written by non-native speakers. **Nothing in my test measures that difference**,
+and it is the most likely reason for a choice that looked good on doctl to perform badly
+elsewhere.
+
+**Build a separate answer key for each product** while shadow mode runs. I would aim for 150 to
+250 issues per product, using the same two-source method I used here. This is where the real cost
+of the project sits, and it is roughly one day of an engineer's attention per product rather
+than money spent on computing. Before going further I would want two people to label the same
+100 issues, so that there is a measured figure for how often people agree with each other. That
+figure tells you when to stop improving the model. Pushing a score from 0.85 to 0.88 when two
+people only agree with each other 0.86 of the time is spending money on noise.
+
+**Then run a careful trial on one or two low-risk repositories.** Apply the model's label
+automatically only when the model is confident. Below that level of confidence, obtain the second
+opinion. If the two models still disagree, send the issue to a person. The confidence threshold
+must be chosen from measured data rather than because 0.8 looks like a reasonable number, and the
+confidence score itself must be validated first, because models are frequently confident and
+wrong at the same time. Security issues should be treated differently from the rest: the system
+should over-report them, and it should never close one automatically, because a wrongly
+categorised issue is easy to correct while a missed vulnerability is not.
+
+**Then widen the rollout** one product at a time, with the second opinion enabled. The rate at
+which the two models disagree tells you directly how much work the second model will receive,
+and therefore what that tier will cost.
+
+**Where I expect this to break down.** Genuinely ambiguous issues are a real and permanent part
+of the workload rather than a flaw in my labelling, so they should go to a person; the most
+useful thing a classifier can report about a genuinely ambiguous issue is that it declines to
+guess. Six categories will not survive contact with six products, because somebody will
+eventually need a `billing` category, which is why the list of categories lives in one place and
+the prompt is generated from that list rather than written out by hand for each category. The
+way people write issues drifts over the years, so I would monitor how the spread of predicted
+categories changes over time and raise an alarm if it drifts, because that check works without
+needing correct answers. Models are eventually retired, and this harness is the regression test
+for that event. Providers also update models without changing their names, so I would replay a
+small fixed set of issues on a schedule and compare the results against the saved run for the
+same dataset. Finally I would cap the length of model output and raise an alarm on the average
+number of output tokens per call, because total spending only tells you about a problem after
+the fact whereas the average output length tells you which model changed.
+
+**I would not fine-tune a model yet.** I would only consider it once a straightforward prompted
+model, together with the second opinion, has stopped improving and is still performing below the
+level at which people agree with each other. That level is precisely the thing I have not
+measured. Fine-tuning replaces a configuration change with a training pipeline, a problem of
+versioning training data, and a model the customer then owns and must maintain.
+
+## How to run it
+
+```bash
+docker build -t doctl-eval .
+cp .env.example .env                 # put your key in DO_INFERENCE_API_KEY
+docker run --rm -p 8080:8080 --env-file .env \
+  -v "$PWD/data/runs:/app/data/runs" doctl-eval
+# then open http://localhost:8080
+```
+
+The issues and the answer key are both built into the image, so a run needs neither access to
+GitHub nor a GitHub token. Results are written to the folder you mounted.
+
+To run it without Docker, use `make install && make verify`, then
+`PROVIDER=digitalocean DO_INFERENCE_API_KEY=<key> make screen` to reproduce the model
+comparison, and `make serve` to start the application. `make serve-mock` runs the simulator
+offline and needs no key at all.
+
+**Settings.** `DO_INFERENCE_API_KEY` holds the Serverless Inference API key, and it is the only
+setting you must provide. It is never built into the image. Every other setting has a working
+default.
+
+| variable | default | what it does |
+|---|---|---|
+| `DO_INFERENCE_API_KEY` | — | **Required.** Your Serverless Inference API key. |
+| `PROVIDER` | `digitalocean` | Use `digitalocean` for real calls, or `mock` for the offline simulator. |
+| `DO_INFERENCE_BASE_URL` | `https://inference.do-ai.run/v1` | Any endpoint that is compatible with the OpenAI API. |
+| `CONCURRENCY` | `8` | How many requests run at the same time, shared between both models. It can also be changed for each run in the application, so you never need to rebuild the image to change it. |
+| `SCORED_SPLIT` | `test` | Use `test` for the reported score, or `dev` while tuning. |
+| `MAX_ISSUES` | `0` | `0` means all 536 issues. A number above 0 takes an evenly spread sample, which is useful for quick tests. |
+| `REASONING_MAX_TOKENS` | `1400` | How much room to allow models that write out their reasoning. Setting it too low produces `parse_error` results. |
+| `REQUEST_TIMEOUT_S` / `MAX_RETRIES` / `TEMPERATURE` | `60` / `3` / `0` | How long to wait for a reply, how many attempts to make, and how much randomness to allow. |
+
+All thirteen settings are documented with their defaults in [`.env.example`](.env.example).
+
+One point I should flag, because it is a deliberate decision rather than an oversight: the
+application has no login, and `POST /api/run` spends real money using the key held in the
+container's environment. That is acceptable when the application runs on localhost or behind a
+proxy that handles authentication. On a public address it would need a login in front of it and
+a limit on spending.
+
+## The data files
+
+- `data/corpus/doctl-issues-snapshot.json` holds the frozen set of 536 issues, with the
+  fingerprint `18d67e20321158c9`.
+- `data/ground_truth/gold.json` holds the 362 answers, each recording where it came from and why.
+- `data/ground_truth/hand_labels.json` holds the 58 answers I wrote myself, along with the 15
+  issues I declined to answer.
+- `data/ground_truth/ANNOTATION_GUIDE.md` holds the labelling rules, which I wrote before I
+  wrote any labels.
+- `data/runs/` holds every completed run, with the full detail for every issue: the category
+  chosen, the raw reply, the timing, the token counts and the cost breakdown.
+- `data/screening/` holds the tables comparing all eleven models.
+
+## What I did not do, and why
+
+**I did not compare against a frontier model.** The credits do not cover Claude or GPT-5.x, so
+the question of whether the customer is overpaying is answered within the range of models the
+credits reach, using qwen3.5-397b as the substitute for the top of that range.
+
+**I did not have a second person check the answer key.** One person wrote it in a single pass,
+so I have no measurement of how often two people would agree. This is the answer key's greatest
+weakness and the first thing I would correct at a larger scale.
+
+**I did not check whether the confidence scores mean anything.** I record them for every call
+but I never verified that they separate correct answers from wrong ones. Until somebody does
+verify that, my recommendation routes work based on the two models disagreeing, which is
+something I have measured.
+
+**I did not fine-tune, use retrieval, or combine several models by voting.** All three are
+reasonable next steps, and all three are premature while a straightforward prompted model has
+not yet stopped improving against a ceiling that nobody has measured.
+
+**I did not label all 536 issues by hand.** 174 issues have no correct answer recorded and
+appear in the unscored view of the application instead. A real customer's workload is mostly
+unlabelled, so that part of the application does useful work rather than sitting unused.
+
+**I did not use scikit-learn.** Precision, recall and F1 across six categories takes about
+twenty lines to write, and the exercise asks for the arithmetic to be checkable. You can read my
+definition of F1 in `metrics.py`. You cannot read one that sits inside an imported library.

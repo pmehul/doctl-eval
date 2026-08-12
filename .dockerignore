@@ -1,0 +1,17 @@
+# Keep the build context small and keep secrets and local state out of layers.
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.env
+.env.*
+!.env.example
+data/runs/
+data/screening/
+*.pdf
+*.md
+!README.md
+.DS_Store
+.pytest_cache/

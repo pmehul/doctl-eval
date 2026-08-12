@@ -1,0 +1,4069 @@
+{
+  "schema_version": 1,
+  "corpus_hash": "18d67e20321158c9",
+  "schema": [
+    "bug",
+    "enhancement",
+    "question",
+    "documentation",
+    "security",
+    "other"
+  ],
+  "label_map": {
+    "bug": "bug",
+    "suggestion": "enhancement",
+    "enhancement": "enhancement",
+    "security vulnerability": "security",
+    "question": "question",
+    "troubleshooting": "question",
+    "docs": "documentation",
+    "duplicate": "other"
+  },
+  "conflict_precedence": [
+    "security",
+    "other",
+    "documentation",
+    "bug",
+    "enhancement",
+    "question"
+  ],
+  "split": {
+    "dev_fraction": 0.3,
+    "seed": 20260811
+  },
+  "stats": {
+    "tier_maintainer": 304,
+    "tier_hand": 58,
+    "conflicts_resolved": 5,
+    "conflicts_dropped": 0,
+    "excluded_ambiguous": 15,
+    "unlabeled_left_unscored": 159,
+    "overlay_vs_maintainer_disagreements": []
+  },
+  "distribution": {
+    "all": {
+      "documentation": 18,
+      "bug": 173,
+      "enhancement": 112,
+      "question": 28,
+      "other": 5,
+      "security": 26
+    },
+    "dev": {
+      "documentation": 5,
+      "bug": 52,
+      "question": 8,
+      "other": 2,
+      "enhancement": 34,
+      "security": 8
+    },
+    "test": {
+      "documentation": 13,
+      "enhancement": 78,
+      "bug": 121,
+      "question": 20,
+      "other": 3,
+      "security": 18
+    },
+    "templated": {
+      "security": 26
+    }
+  },
+  "totals": {
+    "corpus": 536,
+    "gold": 362,
+    "dev": 109,
+    "test": 253,
+    "unscored": 174
+  },
+  "items": [
+    {
+      "number": 24,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "asks for README to document compiling from source",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 25,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "reports docs do not match behaviour; fix lands in docs",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 26,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "misleading title ('What broke Jim?') but body is a real auth login defect",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 28,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "config file format is undocumented",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 47,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for a FreeBSD release artefact",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 48,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks how to rebuild a droplet with doctl",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 67,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for git-style aliases",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 78,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 96,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for jsonpath traversal of output",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 119,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 137,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 163,
+      "label": "other",
+      "label_source": "hand",
+      "rationale": "title 'test', body 'test' -- placeholder issue, no content",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 166,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks why two similar flags differ",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 183,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks how to add multiple tags at creation",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 184,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "body: 'Documentation unclear on syntax for generating new snapshots'",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 189,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "help output omits a required argument; fix is help text",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 211,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks how to install on Windows 10",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 226,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['packaging', 'suggestion', 'windows']",
+      "templated": false,
+      "maintainer_labels": [
+        "packaging",
+        "suggestion",
+        "windows"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 238,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 240,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "hardcoded config path is wrong on Windows",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 244,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks how to enable monitoring on an existing droplet",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 247,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "cannot express 'all ports' in a firewall rule",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 253,
+      "label": "other",
+      "label_source": "hand",
+      "rationale": "administrative request to transfer snap store ownership; not a code defect or feature",
+      "templated": false,
+      "maintainer_labels": [
+        "packaging"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 258,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 263,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'packaging', 'wip']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "packaging",
+        "wip"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 271,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "asks for a doc on re-imaging a droplet",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 274,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for snapshots to carry a slug",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 276,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "published sha256 does not match the released darwin binary",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 279,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks how to list image slugs",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 281,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks how to auth init non-interactively (usage question, not a request)",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 283,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for version command to prompt for updates",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 288,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks how to get droplet list into a file",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 290,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks how to attach multiple volumes at creation",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 293,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks whether LB logs are viewable",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 294,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "auth init prompts for token even when the flag is supplied",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 298,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 308,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 309,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 311,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['packaging', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "packaging",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 314,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion', 'version 2.x']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion",
+        "version 2.x"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 317,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 318,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks what the name 'doctl' stands for",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 335,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 336,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question', 'waiting-response']",
+      "templated": false,
+      "maintainer_labels": [
+        "question",
+        "waiting-response"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 345,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 346,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 368,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for a MacPorts distribution",
+      "templated": false,
+      "maintainer_labels": [
+        "help wanted",
+        "packaging"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 389,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 394,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 395,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "warning string prints the wrong command; fix is the message text",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 400,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 409,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 411,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "auth contexts are lowercased on switch/create",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 417,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 420,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'enhancement', 'good first issue']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "enhancement",
+        "good first issue"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 425,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 441,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for an ARM build",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 446,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "asks for completion command to appear in help text",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 449,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 452,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "asks for valid options to be listed in help text",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 457,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'snap', 'wip']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "snap",
+        "wip"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 459,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 461,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 464,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 479,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "volume ls -o json returns null",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 493,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 496,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 507,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "release binaries named with a spurious .exe",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 535,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 543,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 546,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "author states 'this is more of a question than an issue'; asks about ordering",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 547,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 556,
+      "label": "question",
+      "label_source": "hand",
+      "rationale": "asks whether contexts can be listed",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 567,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 568,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "duplicated install instructions on the releases page",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 573,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'windows']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "windows"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 630,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 640,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 654,
+      "label": "other",
+      "label_source": "hand",
+      "rationale": "off-topic: user cannot run geth (Ethereum client), unrelated to doctl",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 655,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 663,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 668,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 670,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['troubleshooting']",
+      "templated": false,
+      "maintainer_labels": [
+        "troubleshooting"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 672,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "asks for a better help menu on create image",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 692,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['troubleshooting']",
+      "templated": false,
+      "maintainer_labels": [
+        "troubleshooting"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 699,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 708,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 710,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['question']",
+      "templated": false,
+      "maintainer_labels": [
+        "question"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 716,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "asks for uninstall documentation",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 719,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "README section on context switching is confusing",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 722,
+      "label": "question",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['troubleshooting']",
+      "templated": false,
+      "maintainer_labels": [
+        "troubleshooting"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 725,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 726,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 729,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 730,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 733,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 735,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 751,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for a Debian package repository",
+      "templated": false,
+      "maintainer_labels": [
+        "packaging"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 752,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'packaging']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "packaging"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 771,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 784,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 790,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 791,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 793,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 794,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 795,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 799,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 803,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 809,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'snap']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "snap"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 811,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 812,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 814,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 817,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 818,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 821,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 824,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 825,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 830,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 833,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 834,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 840,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'enhancement']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "enhancement"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 843,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 845,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 846,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 847,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 849,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 853,
+      "label": "documentation",
+      "label_source": "maintainer_conflict_resolved",
+      "rationale": "labels mapped to ['bug', 'documentation']; precedence chose documentation",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "docs"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 856,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 857,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 859,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 866,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks to run gofmt across the codebase (internal quality work)",
+      "templated": false,
+      "maintainer_labels": [
+        "good first issue",
+        "hacktoberfest",
+        "help wanted"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 870,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "misspellings in user-facing strings and docs",
+      "templated": false,
+      "maintainer_labels": [
+        "good first issue",
+        "hacktoberfest",
+        "help wanted"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 876,
+      "label": "bug",
+      "label_source": "maintainer_conflict_resolved",
+      "rationale": "labels mapped to ['bug', 'enhancement']; precedence chose bug",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "snap",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 877,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug', 'snap']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug",
+        "snap"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 878,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 880,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 881,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 883,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 889,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 891,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'windows']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "windows"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 894,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['good first issue', 'hacktoberfest', 'help wanted', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "good first issue",
+        "hacktoberfest",
+        "help wanted",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 895,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 908,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'waiting-response']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "waiting-response"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 915,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 916,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 919,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 923,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 927,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 928,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 930,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 932,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 933,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 934,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 936,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'enhancement', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "enhancement",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 937,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 947,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 951,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 953,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 954,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 958,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 964,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['good first issue', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "good first issue",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 965,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['good first issue', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "good first issue",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 968,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'snap']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "snap"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 970,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['good first issue', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "good first issue",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 972,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 973,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 974,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 975,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 978,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 979,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 980,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 985,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 989,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 992,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 993,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 995,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 996,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 997,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 999,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1001,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1003,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug', 'do-api']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug",
+        "do-api"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1007,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1017,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1018,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1020,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1022,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "do-api",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1023,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1024,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1028,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1029,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1032,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1037,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1042,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1059,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1061,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1063,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug', 'do-api']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug",
+        "do-api"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1064,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1066,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1071,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1074,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'snap']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "snap"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1083,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1085,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1086,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1087,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1088,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1090,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1091,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1092,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1094,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1095,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1096,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1105,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1106,
+      "label": "other",
+      "label_source": "maintainer_conflict_resolved",
+      "rationale": "labels mapped to ['bug', 'other']; precedence chose other",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "duplicate"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1110,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1129,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1130,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1131,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1139,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1142,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "apps update --wait hangs forever on a no-op deployment",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 1144,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1147,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1156,
+      "label": "documentation",
+      "label_source": "maintainer_conflict_resolved",
+      "rationale": "labels mapped to ['documentation', 'enhancement']; precedence chose documentation",
+      "templated": false,
+      "maintainer_labels": [
+        "docs",
+        "good first issue",
+        "hacktoberfest",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1164,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1165,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1167,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1171,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1175,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1176,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1180,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'waiting-response']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "waiting-response"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1190,
+      "label": "documentation",
+      "label_source": "maintainer_conflict_resolved",
+      "rationale": "labels mapped to ['documentation', 'enhancement']; precedence chose documentation",
+      "templated": false,
+      "maintainer_labels": [
+        "docs",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1192,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1196,
+      "label": "security",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['security vulnerability']",
+      "templated": true,
+      "maintainer_labels": [
+        "security vulnerability"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1217,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'waiting-response']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "waiting-response"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1221,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1243,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1262,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['good first issue', 'hacktoberfest', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "good first issue",
+        "hacktoberfest",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1263,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['hacktoberfest', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "hacktoberfest",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1264,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['hacktoberfest', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "hacktoberfest",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1267,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1268,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1271,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1274,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks to add Dependabot",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 1280,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1281,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1284,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1291,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1300,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1306,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1312,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1322,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug', 'waiting-response']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug",
+        "waiting-response"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1326,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1329,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1330,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1331,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1335,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1340,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1341,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1344,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1345,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['Needs Investigation', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "Needs Investigation",
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1349,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1354,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'hacktoberfest', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "hacktoberfest",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1358,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1359,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['enhancement', 'good first issue', 'hacktoberfest', 'help wanted']",
+      "templated": false,
+      "maintainer_labels": [
+        "enhancement",
+        "good first issue",
+        "hacktoberfest",
+        "help wanted"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1361,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1363,
+      "label": "other",
+      "label_source": "hand",
+      "rationale": "spam link, no issue content",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 1364,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'packaging', 'snap']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "packaging",
+        "snap"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1365,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1366,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1367,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1375,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1380,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1382,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1390,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1394,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1396,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1407,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1415,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['packaging', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "packaging",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1417,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1418,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1419,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'good first issue', 'hacktoberfest', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "good first issue",
+        "hacktoberfest",
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1426,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1436,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1444,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1447,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1449,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1460,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1461,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1464,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1465,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1474,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'do-api']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "do-api"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1507,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1512,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1513,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1516,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'do-api']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "do-api"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1525,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1527,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1530,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1533,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1534,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1536,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1537,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1543,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1545,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1553,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1559,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1561,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1572,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for dockerSocketPath to be configurable",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 1574,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1584,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks for a --wait flag on databases migrate",
+      "templated": false,
+      "maintainer_labels": [
+        "hacktoberfest",
+        "help wanted"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1594,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1597,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'hacktoberfest']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "hacktoberfest"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1602,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1605,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1610,
+      "label": "documentation",
+      "label_source": "hand",
+      "rationale": "asks for CONTRIBUTING.md and README.md improvements",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 1614,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1615,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1618,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1619,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1624,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1632,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1635,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1637,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1644,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1647,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['do-api', 'suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "do-api",
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1656,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1665,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1666,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1681,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1683,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1689,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1710,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1719,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1722,
+      "label": "enhancement",
+      "label_source": "hand",
+      "rationale": "asks to integrate golangci-lint",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 1723,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['api-parity', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "api-parity",
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1733,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1737,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1749,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'hacktoberfest']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "hacktoberfest"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1750,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1753,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1758,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'hacktoberfest']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "hacktoberfest"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1759,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1760,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1763,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug', 'hacktoberfest']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug",
+        "hacktoberfest"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1775,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1776,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1782,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['app-platform', 'bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "app-platform",
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1785,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1790,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1795,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1797,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1799,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1801,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1813,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1822,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "list-job-invocations returns empty when invocations exist",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 1842,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "doctl cannot parse the config file it wrote itself",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "dev"
+    },
+    {
+      "number": 1854,
+      "label": "enhancement",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['suggestion']",
+      "templated": false,
+      "maintainer_labels": [
+        "suggestion"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1855,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1868,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1869,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "test"
+    },
+    {
+      "number": 1875,
+      "label": "bug",
+      "label_source": "maintainer",
+      "rationale": "maintainer labels ['bug']",
+      "templated": false,
+      "maintainer_labels": [
+        "bug"
+      ],
+      "split": "dev"
+    },
+    {
+      "number": 1882,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "auth switch writes to a stale path",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    },
+    {
+      "number": 1888,
+      "label": "bug",
+      "label_source": "hand",
+      "rationale": "gradient agent list panics on an empty account",
+      "templated": false,
+      "maintainer_labels": [],
+      "split": "test"
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>doctl issue classification &middot; model eval harness</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<div id="simBanner" class="banner banner-warn" hidden>
+  <strong>These numbers are fake.</strong>
+  <span>PROVIDER=mock. The labels, timings and token counts come from an offline
+  simulator, not from real models. The cost maths is real, but it's being applied to
+  made-up token counts. <em>Nothing on this screen proves anything.</em> Set
+  PROVIDER=digitalocean and DO_INFERENCE_API_KEY for real numbers.</span>
+</div>
+<div id="cfgBanner" class="banner banner-error" hidden></div>
+
+<header>
+  <div class="hd-left">
+    <h1>Issue classification &middot; model comparison</h1>
+    <p class="sub" id="corpusLine">loading corpus&hellip;</p>
+  </div>
+  <div class="hd-right" id="headlineStrip"></div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-tab="run" role="tab">Run</button>
+  <button class="tab" data-tab="scored" role="tab">Scored view</button>
+  <button class="tab" data-tab="unscored" role="tab">Unscored view</button>
+  <button class="tab" data-tab="ops" role="tab">Operations &amp; cost</button>
+  <button class="tab" data-tab="method" role="tab">Methodology</button>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════ RUN ══════════════════════════ -->
+<section class="panel active" id="tab-run">
+  <div class="grid2">
+    <div class="card">
+      <h2>Model A</h2>
+      <select id="modelA" class="model-select"></select>
+      <div class="model-meta" id="metaA"></div>
+    </div>
+    <div class="card">
+      <h2>Model B</h2>
+      <select id="modelB" class="model-select"></select>
+      <div class="model-meta" id="metaB"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Run configuration</h2>
+    <div class="controls">
+      <label>
+        Concurrency
+        <input type="number" id="concurrency" min="1" max="256" step="1">
+        <span class="hint">How many requests are in the air at once, shared between both
+        models. Change it here or with the <code>CONCURRENCY</code> env var. No rebuild.</span>
+      </label>
+      <label>
+        Scored split
+        <select id="scoredSplit">
+          <option value="test">test &mdash; locked, quote these numbers</option>
+          <option value="dev">dev &mdash; for tuning the prompt only</option>
+          <option value="all">all &mdash; dev + test</option>
+        </select>
+        <span class="hint">Quote the numbers from <code>test</code>. <code>dev</code> is where
+        the prompt was tuned, so its scores flatter the model.</span>
+      </label>
+    </div>
+    <div class="run-row">
+      <button id="runBtn" class="primary">Run comparison</button>
+      <span id="runNote" class="hint"></span>
+    </div>
+    <div id="progressWrap" hidden>
+      <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+      <p class="mono small" id="progressText"></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Persisted runs</h2>
+    <p class="hint">Every finished run is saved to <code>data/runs/</code> with the detail for
+    every issue. <code>sim</code> means the simulator, <code>live</code> means real models.</p>
+    <div id="runsTable"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ SCORED ══════════════════════════ -->
+<section class="panel" id="tab-scored">
+  <div id="scoredEmpty" class="empty">No run in this session yet. Start one on the <b>Run</b> tab.</div>
+  <div id="scoredBody" hidden>
+
+    <div class="card">
+      <h2>Quality against ground truth</h2>
+      <p class="hint" id="scoredSplitNote"></p>
+      <div id="qualityHeadline" class="metric-row"></div>
+      <details class="explain">
+        <summary>Why macro-F1 is the headline instead of accuracy</summary>
+        <p>The answer key is mostly <code>bug</code> and <code>enhancement</code>. A model that
+        falls back to <code>bug</code> whenever it's unsure will look fine on accuracy and be
+        useless on the four small categories, which is exactly the failure that breaks triage.
+        Macro-F1 gives every category equal weight, so skipping a small one costs the same as
+        skipping a big one.</p>
+        <p>The <em>excl. templated</em> number leaves out the 26 bot-written
+        <code>CVE-…detected in…</code> issues. A regex can spot those, so every model gets them
+        right and the <code>security</code> score makes everyone look good. The gap between the
+        two numbers is how much of that is going on.</p>
+      </details>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><h2>Per-class &mdash; <span class="slot-a" id="pcNameA"></span></h2><div id="perClassA"></div></div>
+      <div class="card"><h2>Per-class &mdash; <span class="slot-b" id="pcNameB"></span></h2><div id="perClassB"></div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>Confusion matrix &mdash; <span class="slot-a" id="cmNameA"></span></h2>
+        <div id="cmA"></div>
+      </div>
+      <div class="card">
+        <h2>Confusion matrix &mdash; <span class="slot-b" id="cmNameB"></span></h2>
+        <div id="cmB"></div>
+      </div>
+    </div>
+    <p class="hint">Rows are the right answer, columns are what the model said. The diagonal is
+    where it got it right. Everything off the diagonal names a boundary it's getting wrong.</p>
+
+    <div class="card">
+      <h2>Drill-down</h2>
+      <div class="filters" id="scoredFilters">
+        <button class="chip active" data-f="disagree">Models disagreed</button>
+        <button class="chip" data-f="either-wrong">Either model wrong</button>
+        <button class="chip" data-f="both-wrong">Both wrong</button>
+        <button class="chip" data-f="a-wrong-b-right">A wrong, B right</button>
+        <button class="chip" data-f="b-wrong-a-right">B wrong, A right</button>
+        <button class="chip" data-f="all">All scored</button>
+      </div>
+      <p class="hint" id="scoredCount"></p>
+      <div id="scoredList" class="itemlist"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ UNSCORED ══════════════════════════ -->
+<section class="panel" id="tab-unscored">
+  <div id="unscoredEmpty" class="empty">No run in this session yet.</div>
+  <div id="unscoredBody" hidden>
+    <div class="card">
+      <h2>Agreement</h2>
+      <div id="agreementHeadline" class="metric-row"></div>
+      <details class="explain">
+        <summary>What agreement does and doesn't tell you</summary>
+        <p>Agreement isn't accuracy. Both models can agree and both be wrong, and the big easy
+        categories push the number up. What it's actually good for is sizing the second-opinion
+        tier: the issues they disagree on are the ones you'd send to a bigger model or a person,
+        so how many there are feeds straight into what production costs. Disagree on 20% here
+        and you're paying for a second opinion on 20% of the volume.</p>
+      </details>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><h2>Suggestion distribution</h2><div id="distChart"></div></div>
+      <div class="card"><h2>Most common disagreements</h2><div id="disagreePairs"></div></div>
+    </div>
+
+    <div class="card">
+      <h2>Suggested labels, no ground truth</h2>
+      <div class="filters" id="unscoredFilters">
+        <button class="chip active" data-f="all">All</button>
+        <button class="chip" data-f="disagree">Disagreements only</button>
+        <button class="chip" data-f="errors">Failed calls</button>
+      </div>
+      <p class="hint" id="unscoredCount"></p>
+      <div id="unscoredList" class="itemlist"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ OPS ══════════════════════════ -->
+<section class="panel" id="tab-ops">
+  <div id="opsEmpty" class="empty">No run in this session yet.</div>
+  <div id="opsBody" hidden>
+    <div class="card">
+      <h2>Run envelope</h2>
+      <div id="opsEnvelope" class="metric-row"></div>
+    </div>
+    <div class="card">
+      <h2>Per-model operational metrics</h2>
+      <div id="opsTable"></div>
+    </div>
+    <div class="card">
+      <h2>Errors by type</h2>
+      <p class="hint">Split up because each one needs a different fix. Rate limits mean drop the
+      concurrency or ask for more quota. Timeouts mean raise the deadline or drop the model.
+      Parse errors mean the model won't stick to the output format, which is a different problem
+      from picking the wrong label.</p>
+      <div id="errTable"></div>
+    </div>
+    <div class="card">
+      <h2>Cost, worked out for one call</h2>
+      <p class="hint">Pick any issue and see the sum behind its price. Rates are dollars per
+      million tokens as published, and they're saved with every result.</p>
+      <div class="controls">
+        <label>Issue
+          <select id="costIssue"></select>
+        </label>
+      </div>
+      <div id="costTrace"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ METHOD ══════════════════════════ -->
+<section class="panel" id="tab-method">
+  <div class="card">
+    <h2>Corpus and ground truth</h2>
+    <div id="methodCorpus"></div>
+  </div>
+  <div class="card">
+    <h2>Candidate pool</h2>
+    <p class="hint">Only DigitalOcean-hosted models, because that's where the exercise credits
+    work. Picked to cover a wide range: size, whether the whole model runs per word or only a
+    slice, whether it thinks out loud first, and about 15x in price.</p>
+    <div id="methodCatalog"></div>
+  </div>
+  <div class="card">
+    <h2>The exact prompt</h2>
+    <p class="hint">The same prompt goes to every model. Tuning it per model would make this a
+    comparison of prompts, not models. The worked examples are pulled in by issue number, and the
+    code checks each one is from dev, so a model never sees an issue it will be scored on.</p>
+    <div id="methodPrompt"></div>
+  </div>
+</section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

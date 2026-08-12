@@ -1,0 +1,27 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Secrets. .env holds the real Serverless Inference key and must never be committed.
+.env
+.env.local
+.env.*
+!.env.example
+
+# macOS / editors
+.DS_Store
+.idea/
+*.swp
+
+# Build noise
+build.log
+
+# Run output. Regenerated on every run, and can be tens of MB.
+# The folder itself is kept via data/runs/.gitkeep so the app has somewhere to write.
+data/runs/*
+!data/runs/.gitkeep
+DigitalOcean FDE Evaluation Exercise.pdf

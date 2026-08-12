@@ -1,0 +1,123 @@
+{
+  "_comment": [
+    "The labels I wrote by hand for the doctl answer key.",
+    "",
+    "Why this file exists. The maintainers' labels cover 304 of 536 issues and lean",
+    "hard one way: 159 bug, 99 enhancement, 26 security (all bot-written CVE",
+    "reports), 15 question, about 5 documentation. An answer key built only from",
+    "those would have almost no documentation or 'other' examples, so there would be",
+    "no way to measure how well a model finds them, and a six-category test would",
+    "quietly be a two-category test.",
+    "",
+    "So these are hand labels for a spread of the 232 issues that carry no useful",
+    "maintainer label. It leans towards documentation, question and other on",
+    "purpose, and it also includes a deliberate block of bug and enhancement items,",
+    "so that 'I labelled it' and 'the category is rare' aren't the same set of",
+    "issues.",
+    "",
+    "These win where they overlap with the automatic mapping. Where the maintainers",
+    "had a view too and it differs, the disagreement is recorded and reported rather",
+    "than quietly overwritten.",
+    "",
+    "Every label below came from reading the title and body against the rules in",
+    "ANNOTATION_GUIDE.md. Issues I judged genuinely ambiguous are listed under",
+    "'excluded' with a reason, instead of being forced into a category. Forcing them",
+    "would add noise that punishes whichever model happened to read them the other",
+    "way."
+  ],
+
+  "annotator": "single annotator, one pass, guide-driven",
+
+  "labels": {
+    "documentation": {
+      "24": "asks for README to document compiling from source",
+      "25": "reports docs do not match behaviour; fix lands in docs",
+      "28": "config file format is undocumented",
+      "184": "body: 'Documentation unclear on syntax for generating new snapshots'",
+      "189": "help output omits a required argument; fix is help text",
+      "271": "asks for a doc on re-imaging a droplet",
+      "395": "warning string prints the wrong command; fix is the message text",
+      "446": "asks for completion command to appear in help text",
+      "452": "asks for valid options to be listed in help text",
+      "568": "duplicated install instructions on the releases page",
+      "672": "asks for a better help menu on create image",
+      "716": "asks for uninstall documentation",
+      "719": "README section on context switching is confusing",
+      "870": "misspellings in user-facing strings and docs",
+      "1610": "asks for CONTRIBUTING.md and README.md improvements"
+    },
+
+    "question": {
+      "48": "asks how to rebuild a droplet with doctl",
+      "166": "asks why two similar flags differ",
+      "183": "asks how to add multiple tags at creation",
+      "211": "asks how to install on Windows 10",
+      "244": "asks how to enable monitoring on an existing droplet",
+      "279": "asks how to list image slugs",
+      "281": "asks how to auth init non-interactively (usage question, not a request)",
+      "288": "asks how to get droplet list into a file",
+      "290": "asks how to attach multiple volumes at creation",
+      "293": "asks whether LB logs are viewable",
+      "318": "asks what the name 'doctl' stands for",
+      "546": "author states 'this is more of a question than an issue'; asks about ordering",
+      "556": "asks whether contexts can be listed"
+    },
+
+    "other": {
+      "163": "title 'test', body 'test' -- placeholder issue, no content",
+      "253": "administrative request to transfer snap store ownership; not a code defect or feature",
+      "654": "off-topic: user cannot run geth (Ethereum client), unrelated to doctl",
+      "1363": "spam link, no issue content"
+    },
+
+    "bug": {
+      "26": "misleading title ('What broke Jim?') but body is a real auth login defect",
+      "240": "hardcoded config path is wrong on Windows",
+      "247": "cannot express 'all ports' in a firewall rule",
+      "276": "published sha256 does not match the released darwin binary",
+      "294": "auth init prompts for token even when the flag is supplied",
+      "411": "auth contexts are lowercased on switch/create",
+      "479": "volume ls -o json returns null",
+      "507": "release binaries named with a spurious .exe",
+      "1142": "apps update --wait hangs forever on a no-op deployment",
+      "1822": "list-job-invocations returns empty when invocations exist",
+      "1842": "doctl cannot parse the config file it wrote itself",
+      "1882": "auth switch writes to a stale path",
+      "1888": "gradient agent list panics on an empty account"
+    },
+
+    "enhancement": {
+      "47": "asks for a FreeBSD release artefact",
+      "67": "asks for git-style aliases",
+      "96": "asks for jsonpath traversal of output",
+      "274": "asks for snapshots to carry a slug",
+      "283": "asks for version command to prompt for updates",
+      "368": "asks for a MacPorts distribution",
+      "441": "asks for an ARM build",
+      "751": "asks for a Debian package repository",
+      "866": "asks to run gofmt across the codebase (internal quality work)",
+      "1274": "asks to add Dependabot",
+      "1572": "asks for dockerSocketPath to be configurable",
+      "1584": "asks for a --wait flag on databases migrate",
+      "1722": "asks to integrate golangci-lint"
+    }
+  },
+
+  "excluded": {
+    "33": "'Multiple Missing Things for change-kernel' -- reads as both defect and feature gap",
+    "43": "'Update Homebrew version' -- stale package could be packaging bug or release chore",
+    "73": "cannot execute binary after following README -- unclear whether docs or artefact is wrong",
+    "130": "docs show new release but brew ships old -- docs vs packaging, genuinely split",
+    "198": "'public images listed by default' -- asserts intended behaviour; bug vs enhancement unresolved",
+    "205": "flag accepts UUID only while others accept names -- inconsistency, bug vs enhancement",
+    "207": "'Cannot detach a volume?' -- phrased as question, may be a defect",
+    "310": "'Dockerfile does not support SSH' -- missing capability vs defect",
+    "312": "returned snapshot ID is not reusable -- defect vs missing feature",
+    "358": "volume delete error, but UUIDs in the report do not match; likely user error vs bug",
+    "360": "'Kubernetes support ?' -- question phrasing, feature-request intent",
+    "378": "exclude token from config file -- security hardening vs enhancement",
+    "407": "'Database support ?' -- question phrasing, feature-request intent",
+    "869": "'fails golint check' -- code-quality defect vs cleanup task",
+    "1505": "rhetorical 'why can't you pre-install the agent' -- question phrasing, feature intent"
+  }
+}
