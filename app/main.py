@@ -267,8 +267,26 @@ async def post_run(payload: dict[str, Any] = Body(default={})) -> Any:
 
 # --- static UI ------------------------------------------------------------
 
+# No-store on the UI assets as well as on the API.
+#
+# There is no cache-busting in the asset filenames, so a browser or CDN holding an
+# old app.js will keep running old front-end code against a redeployed server. That
+# is how a stale "these numbers are fake" banner survived a deployment that had
+# already been switched to real inference. Re-fetching a few kilobytes of JS on
+# every page load costs nothing here; a reviewer looking at last week's UI and
+# drawing conclusions from it costs a great deal.
+_NO_STORE = {"Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache"}
+
+
+class _NoStoreStatic(StaticFiles):
+    def file_response(self, *args: Any, **kwargs: Any) -> Any:
+        resp = super().file_response(*args, **kwargs)
+        resp.headers.update(_NO_STORE)
+        return resp
+
+
 if STATIC_DIR.is_dir():
-    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+    app.mount("/static", _NoStoreStatic(directory=str(STATIC_DIR)), name="static")
 
 
 @app.get("/", dependencies=[Depends(require_auth)])
@@ -276,4 +294,4 @@ async def index() -> Any:
     idx = STATIC_DIR / "index.html"
     if not idx.is_file():
         return JSONResponse({"detail": "UI not built"}, status_code=500)
-    return FileResponse(str(idx))
+    return FileResponse(str(idx), headers=_NO_STORE)

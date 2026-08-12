@@ -33,9 +33,15 @@ function usd(x, opts = {}) {
 /* ---------- boot ---------- */
 async function boot() {
   [HEALTH, CATALOG, CORPUS] = await Promise.all([
-    fetch("/api/health").then((r) => r.json()),
-    fetch("/api/catalog").then((r) => r.json()),
-    fetch("/api/corpus").then((r) => r.json()),
+    // cache: "no-store" on every one of these. The app is served from behind a
+    // CDN, and /api/health decides whether the "these numbers are fake" banner
+    // appears. A cached health response kept that banner on screen for a
+    // deployment that had already been switched to real inference, which looks
+    // exactly like the app ignoring its own configuration. The server sends
+    // no-store as well; this is the browser half of the same fix.
+    fetch("/api/health", { cache: "no-store" }).then((r) => r.json()),
+    fetch("/api/catalog", { cache: "no-store" }).then((r) => r.json()),
+    fetch("/api/corpus", { cache: "no-store" }).then((r) => r.json()),
   ]);
 
   if (HEALTH.simulated) $("simBanner").hidden = false;
@@ -85,7 +91,7 @@ async function boot() {
   // Load the last saved run straight away if there is one, so opening the app shows
   // results instead of an empty shell.
   try {
-    const last = await fetch("/api/result");
+    const last = await fetch("/api/result", { cache: "no-store" });
     if (last.ok) { RESULT = await last.json(); renderAll(); }
   } catch { /* no run in this process yet */ }
 }
@@ -135,7 +141,7 @@ async function startRun() {
 
   const poll = setInterval(async () => {
     try {
-      const p = await (await fetch("/api/progress")).json();
+      const p = await (await fetch("/api/progress", { cache: "no-store" })).json();
       if (p.state === "running") {
         const frac = p.total ? p.completed / p.total : 0;
         $("barFill").style.width = (frac * 100).toFixed(1) + "%";
@@ -171,7 +177,7 @@ async function startRun() {
 }
 
 async function loadRuns() {
-  const { runs } = await (await fetch("/api/runs")).json();
+  const { runs } = await (await fetch("/api/runs", { cache: "no-store" })).json();
   if (!runs.length) { $("runsTable").innerHTML = `<p class="hint">No persisted runs yet.</p>`; return; }
   $("runsTable").innerHTML = `<table><thead><tr>
       <th>finished</th><th>mode</th><th>model A</th><th>model B</th>
@@ -191,7 +197,7 @@ async function loadRuns() {
   document.querySelectorAll(".loadrun").forEach((a) => {
     a.onclick = async (ev) => {
       ev.preventDefault();
-      RESULT = await (await fetch("/api/runs/" + encodeURIComponent(a.dataset.file))).json();
+      RESULT = await (await fetch("/api/runs/" + encodeURIComponent(a.dataset.file), { cache: "no-store" })).json();
       renderAll();
       document.querySelector('.tab[data-tab="scored"]').click();
     };
@@ -551,7 +557,7 @@ async function renderMethod() {
     <p class="hint">Rates from <a href="${esc(CATALOG.pricing_source)}" target="_blank" rel="noopener">DigitalOcean
     Inference pricing</a>, verified ${esc(CATALOG.pricing_verified)}.</p>`;
 
-  const p = await (await fetch("/api/prompt")).json();
+  const p = await (await fetch("/api/prompt", { cache: "no-store" })).json();
   $("methodPrompt").innerHTML = `
     <p class="raw-h">system prompt (<code>${esc(p.prompt_version)}</code>)</p>
     <div class="raw">${esc(p.system_prompt)}</div>
