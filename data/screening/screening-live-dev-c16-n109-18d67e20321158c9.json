@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T13:28:47.347818+00:00",
+  "generated_at": "2026-08-12T13:44:25.323762+00:00",
   "provider": "digitalocean",
   "simulated": false,
   "split": "dev",
@@ -9,8 +9,194 @@
   "corpus_hash": "18d67e20321158c9",
   "pricing_source": "https://docs.digitalocean.com/products/inference/details/pricing/",
   "pricing_verified": "2026-08-07",
-  "wall_clock_s": 18.874125415997696,
+  "wall_clock_s": 172.93385141700855,
   "results": [
+    {
+      "model_id": "mistral-3-14B",
+      "label": "Ministral 3 14B",
+      "params": "14B",
+      "architecture": "dense",
+      "reasoning": false,
+      "usd_per_m_input": 0.2,
+      "usd_per_m_output": 0.2,
+      "quality": {
+        "n_scored": 109,
+        "n_usable": 109,
+        "n_failed": 0,
+        "correct": 94,
+        "accuracy": 0.8623853211009175,
+        "macro_f1": 0.8162268518518517,
+        "macro_f1_excl_templated": 0.7794722222222222,
+        "accuracy_excl_templated": 0.8514851485148515,
+        "n_excl_templated": 101,
+        "per_class": {
+          "bug": {
+            "support": 52,
+            "predicted": 48,
+            "tp": 44,
+            "fp": 4,
+            "fn": 8,
+            "precision": 0.9166666666666666,
+            "recall": 0.8461538461538461,
+            "f1": 0.8799999999999999
+          },
+          "enhancement": {
+            "support": 34,
+            "predicted": 30,
+            "tp": 29,
+            "fp": 1,
+            "fn": 5,
+            "precision": 0.9666666666666667,
+            "recall": 0.8529411764705882,
+            "f1": 0.90625
+          },
+          "question": {
+            "support": 8,
+            "predicted": 10,
+            "tp": 7,
+            "fp": 3,
+            "fn": 1,
+            "precision": 0.7,
+            "recall": 0.875,
+            "f1": 0.7777777777777777
+          },
+          "documentation": {
+            "support": 5,
+            "predicted": 10,
+            "tp": 4,
+            "fp": 6,
+            "fn": 1,
+            "precision": 0.4,
+            "recall": 0.8,
+            "f1": 0.5333333333333333
+          },
+          "security": {
+            "support": 8,
+            "predicted": 8,
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "other": {
+            "support": 2,
+            "predicted": 3,
+            "tp": 2,
+            "fp": 1,
+            "fn": 0,
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8
+          }
+        },
+        "confusion_matrix": {
+          "bug": {
+            "bug": 44,
+            "enhancement": 1,
+            "question": 2,
+            "documentation": 5,
+            "security": 0,
+            "other": 0
+          },
+          "enhancement": {
+            "bug": 2,
+            "enhancement": 29,
+            "question": 1,
+            "documentation": 1,
+            "security": 0,
+            "other": 1
+          },
+          "question": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 7,
+            "documentation": 0,
+            "security": 0,
+            "other": 0
+          },
+          "documentation": {
+            "bug": 1,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 4,
+            "security": 0,
+            "other": 0
+          },
+          "security": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 8,
+            "other": 0
+          },
+          "other": {
+            "bug": 0,
+            "enhancement": 0,
+            "question": 0,
+            "documentation": 0,
+            "security": 0,
+            "other": 2
+          }
+        }
+      },
+      "operational": {
+        "concurrency": 16,
+        "wall_clock_s": 11.897398167013307,
+        "requests": 109,
+        "successful_requests": 109,
+        "failed_requests": 0,
+        "retries": 0,
+        "error_rate": 0.0,
+        "errors_by_type": {},
+        "throughput_rps": 9.161666985493778,
+        "latency_ms": {
+          "p50": 1352.0825410087127,
+          "p95": 3103.5097910062177,
+          "p99": 4082.758707998437,
+          "mean": 1392.6104387702846,
+          "max": 4902.512667002156,
+          "n": 109
+        },
+        "tokens": {
+          "prompt": 128397,
+          "completion": 1901,
+          "total": 130298,
+          "mean_prompt": 1177.954128440367,
+          "mean_completion": 17.440366972477065
+        },
+        "cost": {
+          "total_usd": 0.026059600000000002,
+          "per_call_usd": 0.00023907889908256883,
+          "per_correct_usd": 0.0002772297872340426,
+          "correct": 94
+        }
+      },
+      "parse_strategies": {
+        "bare_json": 109
+      },
+      "token_cap": 1400,
+      "output_truncated": false,
+      "quality_unreliable": false,
+      "repeat": {
+        "n": 5,
+        "macro_f1_values": [
+          0.80751871788056,
+          0.812017612017612,
+          0.8162268518518517,
+          0.8162268518518517,
+          0.8257003090014884
+        ],
+        "macro_f1_mean": 0.8155380685206728,
+        "macro_f1_stdev": 0.006725391721371479,
+        "macro_f1_min": 0.80751871788056,
+        "macro_f1_max": 0.8257003090014884,
+        "accuracy_mean": 0.8605504587155963,
+        "accuracy_stdev": 0.0076757800599456544
+      }
+    },
     {
       "model_id": "deepseek-4-flash",
       "label": "DeepSeek V4 Flash",
@@ -23,52 +209,52 @@
         "n_scored": 109,
         "n_usable": 109,
         "n_failed": 0,
-        "correct": 92,
-        "accuracy": 0.8440366972477065,
-        "macro_f1": 0.7934423877170326,
-        "macro_f1_excl_templated": 0.7521308652604392,
-        "accuracy_excl_templated": 0.8316831683168316,
+        "correct": 91,
+        "accuracy": 0.8348623853211009,
+        "macro_f1": 0.7787265140798104,
+        "macro_f1_excl_templated": 0.7344718168957723,
+        "accuracy_excl_templated": 0.8217821782178217,
         "n_excl_templated": 101,
         "per_class": {
           "bug": {
             "support": 52,
-            "predicted": 49,
-            "tp": 45,
-            "fp": 4,
-            "fn": 7,
-            "precision": 0.9183673469387755,
-            "recall": 0.8653846153846154,
-            "f1": 0.8910891089108911
+            "predicted": 46,
+            "tp": 43,
+            "fp": 3,
+            "fn": 9,
+            "precision": 0.9347826086956522,
+            "recall": 0.8269230769230769,
+            "f1": 0.8775510204081632
           },
           "enhancement": {
             "support": 34,
-            "predicted": 35,
-            "tp": 30,
-            "fp": 5,
-            "fn": 4,
-            "precision": 0.8571428571428571,
-            "recall": 0.8823529411764706,
-            "f1": 0.8695652173913043
+            "predicted": 37,
+            "tp": 31,
+            "fp": 6,
+            "fn": 3,
+            "precision": 0.8378378378378378,
+            "recall": 0.9117647058823529,
+            "f1": 0.8732394366197184
           },
           "question": {
             "support": 8,
-            "predicted": 6,
-            "tp": 4,
-            "fp": 2,
-            "fn": 4,
-            "precision": 0.6666666666666666,
-            "recall": 0.5,
-            "f1": 0.5714285714285715
+            "predicted": 9,
+            "tp": 5,
+            "fp": 4,
+            "fn": 3,
+            "precision": 0.5555555555555556,
+            "recall": 0.625,
+            "f1": 0.5882352941176471
           },
           "documentation": {
             "support": 5,
-            "predicted": 9,
-            "tp": 3,
-            "fp": 6,
-            "fn": 2,
-            "precision": 0.3333333333333333,
-            "recall": 0.6,
-            "f1": 0.42857142857142855
+            "predicted": 7,
+            "tp": 2,
+            "fp": 5,
+            "fn": 3,
+            "precision": 0.2857142857142857,
+            "recall": 0.4,
+            "f1": 0.3333333333333333
           },
           "security": {
             "support": 8,
@@ -93,16 +279,16 @@
         },
         "confusion_matrix": {
           "bug": {
-            "bug": 45,
-            "enhancement": 2,
-            "question": 1,
+            "bug": 43,
+            "enhancement": 3,
+            "question": 2,
             "documentation": 4,
             "security": 0,
             "other": 0
           },
           "enhancement": {
-            "bug": 2,
-            "enhancement": 30,
+            "bug": 1,
+            "enhancement": 31,
             "question": 1,
             "documentation": 1,
             "security": 0,
@@ -111,16 +297,16 @@
           "question": {
             "bug": 1,
             "enhancement": 2,
-            "question": 4,
-            "documentation": 1,
+            "question": 5,
+            "documentation": 0,
             "security": 0,
             "other": 0
           },
           "documentation": {
             "bug": 1,
             "enhancement": 1,
-            "question": 0,
-            "documentation": 3,
+            "question": 1,
+            "documentation": 2,
             "security": 0,
             "other": 0
           },
@@ -144,34 +330,34 @@
       },
       "operational": {
         "concurrency": 16,
-        "wall_clock_s": 18.799935582996113,
+        "wall_clock_s": 21.98349933300051,
         "requests": 109,
         "successful_requests": 109,
         "failed_requests": 0,
         "retries": 0,
         "error_rate": 0.0,
         "errors_by_type": {},
-        "throughput_rps": 5.797892206534298,
+        "throughput_rps": 4.958264303098222,
         "latency_ms": {
-          "p50": 2151.1109580023913,
-          "p95": 3794.0146250039106,
-          "p99": 4538.61970899743,
-          "mean": 2431.78341700068,
-          "max": 6046.558250003727,
+          "p50": 2438.1342499982566,
+          "p95": 5469.727875009994,
+          "p99": 6203.735290997429,
+          "mean": 2797.4618268347454,
+          "max": 6522.780708997743,
           "n": 109
         },
         "tokens": {
           "prompt": 126277,
-          "completion": 1714,
-          "total": 127991,
+          "completion": 1716,
+          "total": 127993,
           "mean_prompt": 1158.5045871559632,
-          "mean_completion": 15.724770642201834
+          "mean_completion": 15.743119266055047
         },
         "cost": {
-          "total_usd": 0.008874788,
-          "per_call_usd": 8.142007339449541e-05,
-          "per_correct_usd": 9.646508695652174e-05,
-          "correct": 92
+          "total_usd": 0.008875124,
+          "per_call_usd": 8.142315596330275e-05,
+          "per_correct_usd": 9.752883516483516e-05,
+          "correct": 91
         }
       },
       "parse_strategies": {
@@ -179,7 +365,23 @@
       },
       "token_cap": 1400,
       "output_truncated": false,
-      "quality_unreliable": false
+      "quality_unreliable": false,
+      "repeat": {
+        "n": 5,
+        "macro_f1_values": [
+          0.7591662422544775,
+          0.7733408748114631,
+          0.7787265140798104,
+          0.780739179729863,
+          0.7844593088071349
+        ],
+        "macro_f1_mean": 0.7752864239365498,
+        "macro_f1_stdev": 0.00986602759023893,
+        "macro_f1_min": 0.7591662422544775,
+        "macro_f1_max": 0.7844593088071349,
+        "accuracy_mean": 0.8385321100917431,
+        "accuracy_stdev": 0.015351560119891295
+      }
     }
   ]
 }

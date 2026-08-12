@@ -228,31 +228,46 @@ BY_ID: dict[str, ModelSpec] = {m.id: m for m in CATALOG}
 # winner, and qwen3.5-397b-a17b returned one usable label out of 109, failing the
 # rest to rate limiting at concurrency 8.
 #
-#   deepseek-4-flash   macro-F1 0.847   $8.14e-05/call   p95  3200ms   0.0% err
-#   mistral-3-14B      macro-F1 0.826   $2.39e-04/call   p95  3354ms   0.0% err
+# Five runs of each on the same 109 dev issues at concurrency 16, mean +/- stdev:
 #
-# A is primary: best macro-F1 of the field and the cheapest per call at the same
-# time, which is not the usual shape of that tradeoff.
+#                    macro-F1        p50        p95        rps      $/call
+#   mistral-3-14B    0.816±0.007    1335ms     2858ms    10.28    $2.39e-04
+#   deepseek-4-flash 0.775±0.010    2555ms     6051ms     4.58    $8.14e-05
 #
-# B is a hedge rather than an escalation tier, and the distinction is deliberate.
-# The two are level on quality once you look at where the gap comes from: A's
-# 0.021 macro-F1 lead rests on the documentation and other classes, 5 and 2 items
-# each, while B is better on bug, enhancement and question, which is 94 of the 109.
-# Macro-F1 weights all six classes equally, so seven items outvote ninety-four.
-# Calling them indistinguishable is what the evidence supports.
+# Mistral is primary. It wins quality, latency and throughput; DeepSeek wins price.
 #
-# What B is really for is independent capacity. 284B MoE against 14B dense, a
-# different vendor and a 20x parameter gap, so a rate-limit event or an outage on
-# one does not take the workload with it. That is not hypothetical here: it is
-# exactly how qwen3.5-397b-a17b failed during screening.
+# The ordering here is the reverse of what a single run said, which is the reason
+# the numbers above are averages of five. One run each had put DeepSeek ahead on
+# macro-F1, 0.847 to 0.826, and that is what these defaults used to be set to. Five
+# runs each put DeepSeek's best result, 0.784, below Mistral's worst, 0.808: the
+# ranges do not overlap, the difference of means is 0.040 against a standard error
+# of 0.005, and the earlier 0.847 lies outside every one of the nine later
+# measurements of that model. A hosted endpoint is not deterministic at temperature
+# 0, run-to-run spread on this task is about 0.02 to 0.04 macro-F1, and the original
+# eleven-model leaderboard spanned 0.070 from first to tenth. Most of that ranking
+# was noise, and the top of it was wrong.
 #
-# No model earned the escalation slot. Every one of the eleven scores between 0.47
-# and 0.59 on documentation, the hardest class, so routing hard cases to a larger
-# model does not fix them. The reasoning models were the clearest test of that and
-# lost outright: deepseek-r1-distill-llama-70b cost 18x the winner for a lower
-# macro-F1, at a p95 of 115 seconds.
-DEFAULT_MODEL_A = "deepseek-4-flash"
-DEFAULT_MODEL_B = "mistral-3-14B"
+# So the tradeoff is not capability against capability, it is money against
+# everything else, and it resolves on volume. Per correct classification Mistral
+# costs $2.77e-04 and DeepSeek $9.75e-05, so DeepSeek is 2.8x cheaper per useful
+# answer even after its lower accuracy is accounted for. At a million
+# classifications a month that is $239 against $81, a difference too small to buy a
+# 4-point macro-F1 drop. At a hundred million it is $23,900 against $8,140, and the
+# argument reverses. Mistral is the default because this workload is not yet at the
+# volume where the cost gap outweighs 4 points of accuracy, 1.9x the speed and
+# 2.25x the throughput.
+#
+# The pair also holds up as a hedge. 14B dense against 284B MoE, different vendors,
+# a 20x parameter gap, so a rate-limit event on one does not take the workload with
+# it. That is not hypothetical: qwen3.5-397b-a17b failed 105 of 109 calls to rate
+# limiting during screening.
+#
+# Nothing earned an escalation slot. All eleven models score between 0.47 and 0.59
+# on documentation, the hardest class, so routing hard cases to a bigger model does
+# not fix them. The reasoning models tested that directly and lost:
+# deepseek-r1-distill-llama-70b cost 18x for a lower macro-F1 at a p95 of 115s.
+DEFAULT_MODEL_A = "mistral-3-14B"
+DEFAULT_MODEL_B = "deepseek-4-flash"
 
 
 def get(model_id: str) -> ModelSpec:
