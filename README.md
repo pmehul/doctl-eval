@@ -144,10 +144,11 @@ difference matter.**
 **The honest summary of that table: Mistral is faster, DeepSeek is cheaper, and on quality I
 cannot separate them on the work that matters.**
 
-The quality columns need reading carefully, because they overstate the gap. On the test split
-the two models agree on 92% of issues, and of 253 issues both were right on 204 and both wrong
-on 27. They differ on 22, Mistral winning 14 and DeepSeek 8. That is a net six issues out of
-253, and a paired test on it gives p = 0.29, which is nowhere near significant.
+The quality columns need reading carefully, because they overstate the gap. On the 253 test
+issues the two models choose the same label 90.9% of the time. Both were right on 204 and both
+wrong on 27. They differ on which one was right for 22 issues, Mistral winning 14 and DeepSeek 8.
+That is a net six issues out of 253, and a paired test on it gives p = 0.29, which is nowhere
+near significant.
 
 The macro-F1 gap of 0.111 looks much larger than that because macro-F1 averages the six classes
 equally, so a class with 3 issues counts as much as one with 121. On the two big classes the
