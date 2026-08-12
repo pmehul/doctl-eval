@@ -91,14 +91,15 @@ _last_result: dict[str, Any] | None = None
 
 
 @app.get("/api/health")
-async def health() -> dict[str, Any]:
+async def health() -> Any:
     problems = settings.validate()
     corpus_ok, corpus_err = True, None
     try:
         load_corpus()
     except SystemExit as exc:
         corpus_ok, corpus_err = False, str(exc)
-    return {
+
+    payload = {
         "ok": not problems and corpus_ok,
         "provider": settings.provider,
         "simulated": settings.is_mock,
@@ -113,7 +114,30 @@ async def health() -> dict[str, Any]:
             "request_timeout_s": settings.request_timeout_s,
             "max_retries": settings.max_retries,
         },
+        # What the process actually received from its environment. This exists
+        # because "I set PROVIDER in the control panel but the app still says
+        # mock" is otherwise unfalsifiable from outside the container: you cannot
+        # tell a variable that was never applied from one that was applied with
+        # the wrong value, or from a deployment that never picked up the change.
+        #
+        # PROVIDER is echoed verbatim because it is not a secret. The two secrets
+        # are reported only as booleans, so this endpoint stays safe to leave
+        # unauthenticated for the platform health check.
+        "environment": {
+            "PROVIDER_raw": os.environ.get("PROVIDER", "<not set>"),
+            "DO_INFERENCE_API_KEY_set": bool(os.environ.get("DO_INFERENCE_API_KEY")),
+            "DO_INFERENCE_API_KEY_length": len(os.environ.get("DO_INFERENCE_API_KEY", "")),
+            "BASIC_AUTH_PASSWORD_set": bool(BASIC_AUTH_PASSWORD),
+            "BASIC_AUTH_USERNAME": BASIC_AUTH_USERNAME,
+        },
     }
+    # No-store because App Platform sits behind a CDN. A cached health response
+    # would keep reporting the old provider after a redeploy fixed it, which
+    # looks exactly like the app ignoring the new setting.
+    return JSONResponse(
+        payload,
+        headers={"Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache"},
+    )
 
 
 @app.get("/api/catalog", dependencies=[Depends(require_auth)])
