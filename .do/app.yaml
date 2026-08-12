@@ -1,7 +1,13 @@
 # App Platform spec for this evaluation harness.
 #
-# You can paste this into the "Edit App Spec" box in the control panel, or apply it
-# with: doctl apps create --spec .do/app.yaml
+# NOTE: the live app was created through the web form rather than from this file,
+# so its generated name differs from the `name:` below. This spec is therefore a
+# reference for recreating the app from scratch, not a description of what is
+# currently running. If you apply it to the existing app, the name and region here
+# will take effect, so check them first.
+#
+# Apply with: doctl apps create --spec .do/app.yaml
+# Or paste into "Edit App Spec" in the control panel.
 #
 # Two settings here are load-bearing and worth not changing casually.
 #
@@ -58,19 +64,30 @@ services:
       # Both are marked SECRET so App Platform encrypts them and they do not
       # appear in the spec once saved.
 
+      # The two secrets below deliberately have no `value:` line.
+      #
+      # An earlier version of this file carried REPLACE_WITH_... placeholders, which
+      # was a trap: applying the spec would have overwritten the real key and
+      # password with those literal strings, and the app would have started making
+      # authenticated calls with the word "REPLACE_WITH_YOUR_SI_API_KEY" as its
+      # credential. Omitting the value means App Platform keeps whatever is already
+      # set for that key, so applying this spec cannot clobber a working secret.
+      #
+      # Set both in the control panel: Settings -> web -> Environment Variables,
+      # with Encrypt ticked. Or pass them on the command line when first creating
+      # the app.
+
       # Your Serverless Inference API key.
       - key: DO_INFERENCE_API_KEY
         scope: RUN_TIME
         type: SECRET
-        value: REPLACE_WITH_YOUR_SI_API_KEY
 
-      # The login password. If you leave this empty the whole app is public, and
-      # POST /api/run spends real credits with no rate limit, so a stranger who
-      # finds the URL could drain the balance. Always set it here.
+      # The login password. Leave this unset in the panel and the whole app is
+      # public, and POST /api/run spends real credits with no rate limit, so a
+      # stranger who finds the URL could drain the balance.
       - key: BASIC_AUTH_PASSWORD
         scope: RUN_TIME
         type: SECRET
-        value: REPLACE_WITH_A_PASSWORD
 
       # ---- plain settings ----------------------------------------------------
       - key: BASIC_AUTH_USERNAME

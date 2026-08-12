@@ -1,6 +1,10 @@
 # Should this customer pay for a frontier model to sort their issues?
 
-**Running app: `‹DEPLOY-AND-PASTE-URL›`**
+**Running app: https://seal-app-34zea.ondigitalocean.app/**
+
+The app asks for a username and password. The username is `reviewer`, and the password is in
+the covering email. That login exists because `POST /api/run` spends real inference credits and
+has no rate limit, so an open URL could be drained by anyone who found it.
 
 My answer is no, and this document explains why.
 
@@ -442,6 +446,16 @@ anything with several users it would not be.
 - `data/runs/` holds every completed run, with the full detail for every issue: the category
   chosen, the raw reply, the timing, the token counts and the cost breakdown.
 - `data/screening/` holds the tables comparing all eleven models.
+
+Two notes on those last two folders. The screening file currently in the repository was produced
+by the simulator, which is why its name contains `sim` rather than `live`; the real one appears
+once `make screen` has been run against an API key.
+
+And on the deployed copy, `data/runs/` empties whenever the app restarts or redeploys. App
+Platform gives a container a temporary filesystem rather than a persistent disk, so saved runs do
+not survive. That is worth knowing before you conclude the run list is broken. Runs made on a
+local machine persist normally. Keeping them on the server would mean writing to Spaces or a
+database, which is more machinery than an evaluation harness needs.
 
 ## What I did not do, and why
 
