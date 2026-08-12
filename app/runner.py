@@ -156,9 +156,21 @@ async def execute_run(
         )
 
     # --- unscored view -------------------------------------------------
+    # Unscored means "not scored in this run", not "has no gold label".
+    #
+    # This iterated corpus.unscored(), which is the 174 issues with no label at all.
+    # With SCORED_SPLIT=test the scored view holds 253, so the two views showed 427
+    # of the 536 issues that were classified and paid for. The 109 dev-split issues
+    # have labels but are deliberately held out of scoring, so they appeared in
+    # neither view and simply vanished from the UI.
+    #
+    # The exercise asks for a scored view for the labeled subset and an unscored view
+    # for the rest, and the rest of 536 after 253 is 283. Partitioning on what this
+    # run actually scored makes the two views add up, and it gives the agreement rate
+    # a wider sample: 283 issues instead of 174.
     unscored_items = []
     agreement_rows = []
-    for issue in corpus.unscored():
+    for issue in (i for i in issues if i.number not in scored_numbers):
         ra = results[(issue.number, model_a)]
         rb = results[(issue.number, model_b)]
         unscored_items.append(
