@@ -35,3 +35,8 @@ data/runs/*
 !data/runs/.gitkeep
 !data/runs/*-live-*.json
 DigitalOcean FDE Evaluation Exercise.pdf
+
+# My own interview notes. Deliberately not shipped: the submission zip is built
+# with `git archive`, so anything tracked here goes to the reviewer, and a file
+# containing a demo script and anticipated questions is not something to hand over.
+mehul_interview.txt
