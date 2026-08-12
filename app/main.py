@@ -23,14 +23,16 @@ amount of security. For anything multi-tenant it would not be.
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import os
 import secrets
 import uuid
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 from fastapi import Body, Depends, FastAPI, HTTPException, status
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 
@@ -278,6 +280,20 @@ async def post_run(payload: dict[str, Any] = Body(default={})) -> Any:
 _NO_STORE = {"Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache"}
 
 
+@lru_cache(maxsize=8)
+def _asset_version(filename: str) -> str:
+    """Short content hash of a static file, used to bust caches.
+
+    Computed once per process. The container is immutable, so the file cannot
+    change under a running process, and re-hashing on every page load would be
+    pointless work.
+    """
+    path = STATIC_DIR / filename
+    if not path.is_file():
+        return "0"
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+
+
 class _NoStoreStatic(StaticFiles):
     def file_response(self, *args: Any, **kwargs: Any) -> Any:
         resp = super().file_response(*args, **kwargs)
@@ -291,7 +307,27 @@ if STATIC_DIR.is_dir():
 
 @app.get("/", dependencies=[Depends(require_auth)])
 async def index() -> Any:
+    """Serve the UI with a cache-busting version stamped onto the asset URLs.
+
+    Sending no-store is not sufficient on its own here. App Platform's proxy
+    rewrites the header: this app sends
+    `Cache-Control: no-store, no-cache, must-revalidate` and the client receives
+    `Cache-Control: private`, which explicitly *permits* browser caching. The
+    practical effect was a browser holding app.js from the first ever deploy and
+    still showing the "these numbers are fake" banner against a server that had
+    long since been switched to real inference.
+
+    So the version is put in the URL, where no proxy can strip it.
+    `/static/app.js?v=<hash>` is a different URL for every build, so a cached copy
+    of the old one can never be matched. The hash is taken from the file contents
+    rather than a hand-maintained number, because a version you have to remember
+    to bump is a version that will be forgotten.
+    """
     idx = STATIC_DIR / "index.html"
     if not idx.is_file():
         return JSONResponse({"detail": "UI not built"}, status_code=500)
-    return FileResponse(str(idx), headers=_NO_STORE)
+
+    html = idx.read_text(encoding="utf-8")
+    for asset in ("app.js", "styles.css"):
+        html = html.replace(f"/static/{asset}", f"/static/{asset}?v={_asset_version(asset)}")
+    return HTMLResponse(html, headers=_NO_STORE)
