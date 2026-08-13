@@ -48,3 +48,4 @@ mehul_presentation_technical.pptx
 scripts/_build_deck.py
 scripts/_build_exec_deck.py
 scripts/_live_run.py
+scripts/_fetch_run.py
