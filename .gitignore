@@ -45,3 +45,4 @@ mehul_presentation.pptx
 # PowerPoint lock files, created while the deck is open
 ~$*
 scripts/_build_deck.py
+scripts/_live_run.py
