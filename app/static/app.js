@@ -104,9 +104,9 @@ async function boot() {
       const { runs } = await readJson(await fetch("/api/runs", { cache: "no-store" }));
       if (runs && runs.length) {
         // runs[0] is the newest; the server sorts on finished_at.
-        RESULT = await readJson(
+        RESULT = requireRun(await readJson(
           await fetch("/api/runs/" + encodeURIComponent(runs[0].file), { cache: "no-store" })
-        );
+        ));
         renderAll();
       }
     }
@@ -127,7 +127,7 @@ async function resumeRunIfActive() {
     $("runNote").textContent = "rejoined a run that was already in progress.";
     const final = await followProgress();
     if (final.state === "done") {
-      RESULT = await readJson(await fetch("/api/result", { cache: "no-store" }));
+      RESULT = requireRun(await readJson(await fetch("/api/result", { cache: "no-store" })));
       $("barFill").style.width = "100%";
       renderAll();
       await loadRuns();
@@ -242,7 +242,7 @@ async function startRun() {
       throw new Error(final.message || "the run failed on the server");
     }
 
-    RESULT = await readJson(await fetch("/api/result", { cache: "no-store" }));
+    RESULT = requireRun(await readJson(await fetch("/api/result", { cache: "no-store" })));
     $("barFill").style.width = "100%";
     $("progressText").textContent =
       `done · ${RESULT.operational.total_requests} calls in ${secs(RESULT.operational.wall_clock_s)} · ` +
@@ -255,6 +255,33 @@ async function startRun() {
   } finally {
     btn.disabled = false;
   }
+}
+
+/* Check that a payload really is a finished run before anything reads into it.
+
+   A run completed on the deployed app, progress reported "done", and then the fetch of
+   /api/result landed on a second container that had never run anything. It answered
+   {"detail":"no run has completed in this process yet"}, which is valid JSON, so it
+   parsed cleanly and was assigned to RESULT. The next line asked for
+   RESULT.operational.total_requests and the user got
+
+     Cannot read properties of undefined (reading 'total_requests')
+
+   which says nothing about the cause. Progress and finished runs are held per process,
+   so with more than one container the balancer can answer the poll from the container
+   that owns the run and the fetch from the one that does not.
+
+   Poll /api/health a few times: more than one "instance" value means more than one
+   container, and the fix is to set the instance count to 1. */
+function requireRun(payload) {
+  if (payload && payload.operational && payload.scored) return payload;
+  const detail = payload && payload.detail ? ` The server said: ${payload.detail}` : "";
+  throw new Error(
+    "the run finished, but fetching the result did not return a run." + detail +
+    " This happens when more than one container is serving the app, because a finished" +
+    " run only exists in the process that produced it. Check how many containers are" +
+    " running, or open the run from the saved runs list on the Run tab."
+  );
 }
 
 /* Parse a response as JSON, but explain it when the body is not JSON at all.
