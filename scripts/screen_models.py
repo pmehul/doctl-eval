@@ -193,7 +193,18 @@ async def screen_one(
         )
 
     n_usable = quality["n_usable"]
-    unreliable = n_usable < max(30, 0.5 * len(issues))
+    # Two ways a score stops being trustworthy, and the second one caught me out.
+    #
+    # Too few answers to score at all: fewer than thirty.
+    #
+    # And too many answers missing to compare against a clean run. The threshold used
+    # to be half, which let a run that lost 27% of its calls to rate limiting report
+    # macro-F1 0.7896 with no mark against it. That was the highest figure I had for
+    # that model, and I quoted it next to scores computed on every call. Five percent
+    # is the line now, because the calls that go missing are not a random sample:
+    # rate limiting takes whatever is in flight, and a class with three test issues
+    # can lose one and shift the headline by 0.067.
+    unreliable = n_usable < 30 or ops["error_rate"] > 0.05
     if unreliable:
         print(
             f"    WARNING  only {n_usable}/{len(issues)} calls returned a label "

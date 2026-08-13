@@ -371,11 +371,30 @@ function renderScored() {
   const sa = RESULT.scored.a, sb = RESULT.scored.b;
   const oa = RESULT.operational.a, ob = RESULT.operational.b;
 
+  // Warn when a run lost calls, because the scores below are computed only from the
+  // ones that came back.
+  //
+  // A run on the deployed app hit rate limits and dropped 27% of its calls, then
+  // reported macro-F1 0.7896 — the highest figure I had for that model. A score built
+  // on three quarters of the data was sitting in a table next to scores built on all
+  // of it, with nothing to tell them apart. The error rate was on the Operations tab,
+  // two clicks away, which is not where someone reading a headline will look.
+  //
+  // 5% is the line because the calls that fail are not a random sample. Rate limiting
+  // takes whatever happened to be in flight, and a class with 3 test issues can lose
+  // one and move the headline by 0.067.
+  const worstErr = Math.max(oa.error_rate || 0, ob.error_rate || 0);
   $("scoredSplitNote").innerHTML =
     `Split <code>${esc(RESULT.scored.split)}</code> · ${int(sa.n_scored)} issues · ` +
     `corpus <code>${esc(RESULT.corpus.corpus_hash)}</code>` +
     (RESULT.scored.split === "dev"
       ? ` · <span style="color:var(--warn)">dev is where the prompt was tuned; these scores are optimistic and should not be quoted</span>`
+      : "") +
+    (worstErr > 0.05
+      ? `<br><span style="color:var(--bad)"><strong>This run lost ${pct(worstErr)} of its calls.</strong>
+         The scores below only count the calls that returned, so they are not comparable with a
+         clean run and should not be quoted. Check Operations &rarr; Errors by type for the
+         cause.</span>`
       : "");
 
   const mk = (slot, s, o, name) => `
