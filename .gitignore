@@ -40,13 +40,11 @@ DigitalOcean FDE Evaluation Exercise.pdf
 # with `git archive`, so anything tracked here goes to the reviewer, and a file
 # containing a demo script and anticipated questions is not something to hand over.
 mehul_interview.txt
-mehul_presentation.txt
-mehul_presentation.pptx
-mehul_presentation_technical.pptx
-mehul_presentation_executive.pptx
+mehul_presentation*.txt
+mehul_presentation*.pptx
 # PowerPoint lock files, created while the deck is open
 ~$*
-scripts/_build_deck.py
-scripts/_build_exec_deck.py
+# Builders for the above. Patterns, not names, so a new deck can't slip through.
+scripts/_build_*deck.py
 scripts/_live_run.py
 scripts/_fetch_run.py
