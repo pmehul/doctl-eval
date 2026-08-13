@@ -51,6 +51,9 @@ app = FastAPI(title="doctl issue-classification eval harness", version="1.0.0")
 BASIC_AUTH_USERNAME = os.environ.get("BASIC_AUTH_USERNAME", "reviewer")
 BASIC_AUTH_PASSWORD = os.environ.get("BASIC_AUTH_PASSWORD", "")
 
+# Unique per process, generated at import. See /api/health for why it is reported.
+INSTANCE_ID = uuid.uuid4().hex[:8]
+
 _basic = HTTPBasic(auto_error=False)
 
 
@@ -114,6 +117,24 @@ async def health() -> Any:
         "corpus_ok": corpus_ok,
         "corpus_error": corpus_err,
         "prompt_version": PROMPT_VERSION,
+        # Identifies which process answered. Poll this endpoint a few times: more than
+        # one id coming back means more than one container is serving traffic.
+        #
+        # That is worth being able to see, because this app assumes it is alone. Only
+        # one run is allowed at a time, and the lock enforcing that lives in process
+        # memory, so a second container has a second lock. Two runs can then proceed
+        # at once, each honestly reporting the concurrency it was given while the real
+        # request rate against the provider is double that. The visible result is
+        # rate-limit errors that look like a provider problem.
+        #
+        # It also makes the UI appear broken. Progress and saved runs are per-process,
+        # so polling lands on whichever container the balancer picks: one knows about
+        # your run, the other reports idle and an empty run list.
+        #
+        # Diagnosing that from outside took a while, so the id is here to make the
+        # next person's job a one-liner:
+        #   for i in $(seq 5); do curl -s $URL/api/health | grep -o '"instance":"[^"]*"'; done
+        "instance": INSTANCE_ID,
         "defaults": {
             "concurrency": settings.concurrency,
             "scored_split": settings.scored_split,
